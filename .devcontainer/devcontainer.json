@@ -1,0 +1,64 @@
+{
+  "capAdd": [
+    "SYS_PTRACE"
+  ],
+  "containerEnv": {
+    "CARGO_HOME": "/workspaces/iso3166/.cache/cargo",
+    "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
+    "EDITOR": "code --reuse-window --wait",
+    "PRE_COMMIT_HOME": "/workspaces/iso3166/.cache/pre-commit",
+    "RUSTC_WRAPPER": "sccache",
+    "SCCACHE_DIR": "/workspaces/iso3166/.cache/sccache"
+  },
+  "containerUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "barbosshack.crates-io",
+        "dotjoshjohnson.xml",
+        "flydreame.docblocker",
+        "github.vscode-github-actions",
+        "github.vscode-pull-request-github",
+        "ms-azuretools.vscode-containers",
+        "panicbit.cargo",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "vadimcn.vscode-lldb"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "modificationsIfAvailable",
+        "[rust]": {
+          "editor.wordWrapColumn": 100,
+          "editor.rulers": [
+            100
+          ]
+        }
+      }
+    }
+  },
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+  "features": {
+    "ghcr.io/devcontainers/features/git-lfs:1": {},
+    "ghcr.io/devcontainers/features/rust:1": {
+      "profile": "complete"
+    },
+    "ghcr.io/devcontainers-extra/features/pre-commit:2": {}
+  },
+  "name": "iso3166",
+  "privileged": true,
+  "postCreateCommand": "/workspaces/iso3166/.devcontainer/post-create.sh",
+  "postAttachCommand": "/workspaces/iso3166/.devcontainer/post-attach.sh",
+  "remoteEnv": {
+    "CARGO_HOME": "/workspaces/iso3166/.cache/cargo",
+    "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
+    "EDITOR": "code --reuse-window --wait",
+    "PRE_COMMIT_HOME": "/workspaces/iso3166/.cache/pre-commit",
+    "RUSTC_WRAPPER": "sccache",
+    "SCCACHE_DIR": "/workspaces/iso3166/.cache/sccache"
+  },
+  "securityOpt": [
+    "seccomp=unconfined"
+  ],
+  "updateRemoteUserUID": true
+}

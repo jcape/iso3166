@@ -1,0 +1,14 @@
+[package]
+name = "iso3166-parsers"
+description = "Parsers for ISO 3166 data"
+readme = "README.md"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
