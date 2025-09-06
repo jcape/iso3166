@@ -19,6 +19,7 @@
         "flydreame.docblocker",
         "github.vscode-github-actions",
         "github.vscode-pull-request-github",
+        "mechatroner.rainbow-csv",
         "ms-azuretools.vscode-containers",
         "panicbit.cargo",
         "rust-lang.rust-analyzer",

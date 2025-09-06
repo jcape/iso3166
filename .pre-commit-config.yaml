@@ -3,7 +3,7 @@ default_install_hook_types:
   - pre-commit
   - commit-msg
 
-exclude: ^LICENSE
+exclude: /(^LICENSE|^parsers\/src\/m49\/2025-09-05\.csv)/
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -17,7 +17,9 @@ repos:
       - id: destroyed-symlinks
       - id: detect-private-key
       - id: end-of-file-fixer
+        exclude: parsers/src/m49/2025-09-05.csv
       - id: fix-byte-order-marker
+        exclude: parsers/src/m49/2025-09-05.csv
       - id: mixed-line-ending
       - id: trailing-whitespace
   - repo: https://github.com/backplane/pre-commit-rust-hooks
@@ -26,7 +28,9 @@ repos:
       - id: fmt
       - id: check
       - id: clippy
+        args: ['--workspace', '--no-deps']
       - id: test
+        args: ['--workspace']
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v4.0.0
     hooks:

@@ -10,5 +10,11 @@ license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
 
+[dependencies]
+serde = { workspace = true, features = ["std"] }
+
+[dev-dependencies]
+csv = "1"
+
 [lints]
 workspace = true

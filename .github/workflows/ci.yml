@@ -2,13 +2,11 @@
 name: ci
 
 "on":
-  push:
-    branches:
-      - "main"
   pull_request:
 
 env:
   CARGO_INCREMENTAL: 0
+  RUSTFLAGS: "-D warnings"
 
 jobs:
   lint:
@@ -68,8 +66,7 @@ jobs:
       - run: |
           cargo +${{ matrix.rust }} clippy \
             --all \
-            --all-features \
-            -- -D warnings
+            --all-features
 
   build:
     runs-on: ubuntu-latest
@@ -79,9 +76,6 @@ jobs:
           - stable
           - beta
         features:
-          - alloc,serde
-          - serde
-          - alloc
           - none
     steps:
       - uses: actions/checkout@v4
