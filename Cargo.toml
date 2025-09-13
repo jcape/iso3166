@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = ["parsers"]
+exclude = [".cache"]
 
 [workspace.dependencies]
 csv = "1"
@@ -10,9 +11,11 @@ serde = { version = "1", default-features = false, features = ["derive"] }
 missing_safety_doc = "forbid"
 
 [workspace.lints.rust]
-unsafe_code = "deny"
 missing_debug_implementations = "forbid"
 missing_docs = "forbid"
+unreachable_pub = "forbid"
+rust_2018_idioms = "warn"
+unsafe_code = "forbid"
 
 [workspace.metadata.release]
 shared-version = true
