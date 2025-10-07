@@ -8,17 +8,20 @@
     "EDITOR": "code --reuse-window --wait",
     "PRE_COMMIT_HOME": "/workspaces/iso3166/.cache/pre-commit",
     "RUSTC_WRAPPER": "sccache",
+    "RUSTFLAGS": "-Dwarnings",
     "SCCACHE_DIR": "/workspaces/iso3166/.cache/sccache"
   },
   "containerUser": "vscode",
   "customizations": {
     "vscode": {
       "extensions": [
+        "DavidAnson.vscode-markdownlint",
         "barbosshack.crates-io",
         "dotjoshjohnson.xml",
         "flydreame.docblocker",
         "github.vscode-github-actions",
         "github.vscode-pull-request-github",
+        "marklarah.pre-commit-vscode",
         "mechatroner.rainbow-csv",
         "ms-azuretools.vscode-containers",
         "panicbit.cargo",
@@ -33,7 +36,12 @@
           "editor.rulers": [
             100
           ]
-        }
+        },
+        "rust-analyzer.cargo.targetDir": "/workspaces/iso3166/target/rust-analyzer",
+        "rust-analyzer.imports.granularity.enforce": true,
+        "rust-analyzer.imports.granularity.group": "crate",
+        "rust-analyzer.imports.group.enable": false,
+        "rust-analyzer.imports.merge.glob": false
       }
     }
   },
@@ -49,13 +57,14 @@
   "name": "iso3166",
   "privileged": true,
   "postCreateCommand": "/workspaces/iso3166/.devcontainer/post-create.sh",
-  "postAttachCommand": "/workspaces/iso3166/.devcontainer/post-attach.sh",
+  "postStartCommand": "/workspaces/iso3166/.devcontainer/post-start.sh",
   "remoteEnv": {
     "CARGO_HOME": "/workspaces/iso3166/.cache/cargo",
     "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
     "EDITOR": "code --reuse-window --wait",
     "PRE_COMMIT_HOME": "/workspaces/iso3166/.cache/pre-commit",
     "RUSTC_WRAPPER": "sccache",
+    "RUSTFLAGS": "-Dwarnings",
     "SCCACHE_DIR": "/workspaces/iso3166/.cache/sccache"
   },
   "securityOpt": [
