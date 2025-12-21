@@ -10,7 +10,9 @@ A collection of crates utilities and support for ISO 3166 countries and regions.
 
 | Crate | Usage |
 |-------|-------|
+| [`iso3166-macros`](./macros) | Code-generation macros |
 | [`iso3166-parsers`](./parsers) | Source data parsers |
+| [`iso3166-static`](./static) | Static generated countries enum |
 
 [license-link]: LICENSE
 [license-image]: https://img.shields.io/github/license/jcape/iso3166?style=flat-square
