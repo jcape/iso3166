@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize, de::Deserializer};
 mod test;
 
 /// A M49 CSV Record.
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct Record {
     /// The global numeric code
     #[serde(alias = "Global Code")]

@@ -15,16 +15,21 @@ confidence-threshold = 0.8
 exceptions = []
 
 [bans]
-multiple-versions = "warn"
-# Lint level for when a crate version requirement is `*`
-wildcards = "deny"
-highlight = "all"
+allow-wildcard-paths = true
 allow = []
 deny = [
     { name = "ring", reason = "https://github.com/briansmith/ring/issues/774" },
 ]
+highlight = "all"
+multiple-versions = "warn"
 skip = []
 skip-tree = []
+wildcards = "deny"
+
+[bans.workspace-dependencies]
+duplicates = 'deny'
+include-path-dependencies = true
+unused = 'deny'
 
 [sources]
 unknown-registry = "warn"

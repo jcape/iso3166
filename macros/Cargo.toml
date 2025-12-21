@@ -1,0 +1,28 @@
+[package]
+name = "iso3166-macros"
+description = "Procedural Macros for ISO 3166"
+readme = "README.md"
+categories = ["data-structures", "finance", "internationalization"]
+keywords = ["iso3166", "proc-macro"]
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+csv.workspace = true
+heck = "0.5"
+iso3166-parsers.workspace = true
+proc-macro2 = "1"
+quote = "1"
+serde = { workspace = true, features = ["std"] }
+syn = { version = "2", features = ["full"] }
+
+[lints]
+workspace = true

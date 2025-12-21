@@ -1,14 +1,15 @@
 [package]
-name = "iso3166-parsers"
-description = "Parsers for ISO 3166 data"
+name = "iso3166-static"
+description = "Static ISO3166 Data"
 readme = "README.md"
 categories = [
   "data-structures",
   "finance",
   "internationalization",
-  "parser-implementations",
+  "no-std",
+  "no-std::no-alloc",
 ]
-keywords = ["iso3166"]
+keywords = ["iso3166", "m49"]
 authors.workspace = true
 edition.workspace = true
 version.workspace = true
@@ -18,10 +19,7 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-serde = { workspace = true, features = ["std"] }
-
-[dev-dependencies]
-csv.workspace = true
+iso3166-macros.workspace = true
 
 [lints]
 workspace = true

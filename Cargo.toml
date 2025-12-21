@@ -1,21 +1,28 @@
 [workspace]
 resolver = "2"
-members = ["parsers"]
+members = ["macros", "parsers", "static"]
 exclude = [".cache"]
 
 [workspace.dependencies]
 csv = "1"
+iso3166-macros = { path = "./macros", version = "0.1" }
+iso3166-parsers = { path = "./parsers", version = "0.1" }
+iso3166-static = { path = "./static", version = "0.1" }
 serde = { version = "1", default-features = false, features = ["derive"] }
 
 [workspace.lints.clippy]
-missing_safety_doc = "forbid"
+cargo = "warn"
+complexity = "warn"
+pedantic = "warn"
+perf = "deny"
+style = "warn"
 
 [workspace.lints.rust]
-missing_debug_implementations = "forbid"
-missing_docs = "forbid"
-unreachable_pub = "forbid"
-rust_2018_idioms = "warn"
-unsafe_code = "forbid"
+missing_debug_implementations = "deny"
+missing_docs = "deny"
+unreachable_pub = "deny"
+rust_2018_idioms = "deny"
+unsafe_code = "deny"
 
 [workspace.metadata.release]
 shared-version = true
