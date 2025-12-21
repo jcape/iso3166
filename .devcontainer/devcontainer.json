@@ -6,7 +6,7 @@
     "CARGO_HOME": "/workspaces/iso3166/.cache/cargo",
     "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
     "EDITOR": "code --reuse-window --wait",
-    "PRE_COMMIT_HOME": "/workspaces/iso3166/.cache/pre-commit",
+    "PREK_HOME": "/workspaces/iso3166/.cache/pre-commit"
   },
   "containerUser": "vscode",
   "customizations": {
@@ -58,7 +58,7 @@
     "CARGO_HOME": "/workspaces/iso3166/.cache/cargo",
     "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
     "EDITOR": "code --reuse-window --wait",
-    "PRE_COMMIT_HOME": "/workspaces/iso3166/.cache/pre-commit",
+    "PREK_HOME": "/workspaces/iso3166/.cache/prek"
   },
   "securityOpt": [
     "seccomp=unconfined"

@@ -11,11 +11,11 @@ iso3166-static = { path = "./static", version = "0.1" }
 serde = { version = "1", default-features = false, features = ["derive"] }
 
 [workspace.lints.clippy]
-cargo = "warn"
-complexity = "warn"
-pedantic = "warn"
+cargo = "deny"
+complexity = "deny"
+pedantic = "deny"
 perf = "deny"
-style = "warn"
+style = "deny"
 
 [workspace.lints.rust]
 missing_debug_implementations = "deny"
