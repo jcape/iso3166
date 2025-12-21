@@ -6,7 +6,7 @@ use iso3166_parsers::m49::Record;
 use proc_macro::TokenStream as TokenStream1;
 use proc_macro2::{Span, TokenStream};
 use std::io::BufReader;
-use syn::{Ident, LitByteStr, Result};
+use syn::{Ident, LitByteStr};
 
 fn ident_from_name(name: &str) -> Ident {
     let ident = name
@@ -38,7 +38,8 @@ fn ident_from_name(name: &str) -> Ident {
     quote::format_ident!("{ident}")
 }
 
-fn m49() -> Result<TokenStream> {
+#[allow(clippy::too_many_lines)]
+fn m49() -> TokenStream {
     let buf_reader = BufReader::new(include_str!("m49.csv").as_bytes());
 
     let mut reader = ReaderBuilder::new()
@@ -76,7 +77,7 @@ fn m49() -> Result<TokenStream> {
         })
         .collect::<(Vec<_>, Vec<_>, Vec<_>, Vec<_>, Vec<_>, Vec<_>, Vec<_>)>();
 
-    let retval = quote::quote! {
+    quote::quote! {
         /// An enumeration of errors which can be returned while deriving a country code from a
         /// string or integer.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -263,13 +264,11 @@ fn m49() -> Result<TokenStream> {
                 }
             }
         }
-    };
-
-    Ok(retval)
+    }
 }
 
 /// Generate data usable for ISO3166 from the M49 dataset.
 #[proc_macro]
 pub fn generate_m49(_: TokenStream1) -> TokenStream1 {
-    m49().expect("Could not generate m49 data").into()
+    m49().into()
 }
