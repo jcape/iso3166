@@ -21,7 +21,7 @@ deny = [
     { name = "ring", reason = "https://github.com/briansmith/ring/issues/774" },
 ]
 highlight = "all"
-multiple-versions = "warn"
+multiple-versions = "deny"
 skip = []
 skip-tree = []
 wildcards = "deny"
