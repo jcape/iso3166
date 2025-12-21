@@ -81,6 +81,7 @@ fn m49() -> TokenStream {
         /// An enumeration of errors which can be returned while deriving a country code from a
         /// string or integer.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[cfg_attr(feature = "serde", derive(::serde::Deserialize, ::serde::Serialize))]
         pub enum Error {
             /// The string provided is too long to be a country code
             InvalidLength,
@@ -127,6 +128,7 @@ fn m49() -> TokenStream {
 
         /// ISO 3166 Countries.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[cfg_attr(feature = "serde", derive(::serde::Deserialize, ::serde::Serialize))]
         #[repr(u16)]
         pub enum Country {
             #(

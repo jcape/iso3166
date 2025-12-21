@@ -20,6 +20,11 @@ rust-version.workspace = true
 
 [dependencies]
 iso3166-macros.workspace = true
+serde = { workspace = true, optional = true, features = ["derive"] }
+
+[features]
+default = ["serde"]
+serde = ["dep:serde"]
 
 [lints]
 workspace = true
