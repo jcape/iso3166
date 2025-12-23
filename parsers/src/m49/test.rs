@@ -8,12 +8,13 @@ const M49_2021_2: &str = include_str!("2025-09-05.csv");
 
 #[test]
 fn count_2021_2() {
+    const EXPECTED: usize = 248;
+
     let mut reader = ReaderBuilder::new()
         .delimiter(b';')
         .has_headers(true)
         .from_reader(M49_2021_2.as_bytes());
     let mut count = 0usize;
-    const EXPECTED: usize = 248;
 
     for result in reader.deserialize::<Record>() {
         let record = result.expect("Could not parse record");

@@ -128,7 +128,6 @@ fn m49() -> TokenStream {
 
         /// ISO 3166 Countries.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-        #[cfg_attr(feature = "serde", derive(::serde::Deserialize, ::serde::Serialize))]
         #[repr(u16)]
         pub enum Numeric {
             #(
