@@ -6,7 +6,10 @@
 #[cfg(feature = "serde")]
 mod serde_;
 
-use core::str::FromStr;
+use core::{
+    fmt::{Display, Formatter, Result as FmtResult},
+    str::FromStr,
+};
 
 iso3166_macros::generate_m49!();
 
@@ -57,6 +60,12 @@ impl Alpha2 {
     #[must_use]
     pub const fn as_str(&self) -> &'static str {
         self.0.as_alpha2_str()
+    }
+}
+
+impl Display for Alpha2 {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        f.write_str(self.as_str())
     }
 }
 
@@ -155,6 +164,12 @@ impl Alpha3 {
     #[must_use]
     pub const fn as_str(&self) -> &'static str {
         self.0.as_alpha3_str()
+    }
+}
+
+impl Display for Alpha3 {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        f.write_str(self.as_str())
     }
 }
 
