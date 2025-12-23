@@ -13,6 +13,12 @@ use core::{
 
 iso3166_macros::generate_m49!();
 
+impl Display for Numeric {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(f, "{}", self.as_u16())
+    }
+}
+
 impl From<Numeric> for u16 {
     fn from(value: Numeric) -> Self {
         value.as_u16()
