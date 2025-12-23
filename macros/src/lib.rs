@@ -206,65 +206,6 @@ fn m49() -> TokenStream {
                 *self as ::core::primitive::u16
             }
         }
-
-        impl ::core::convert::From<Numeric> for ::core::primitive::u16 {
-            fn from(value: Numeric) -> Self {
-                value.as_u16()
-            }
-        }
-
-        impl ::core::convert::TryFrom<::core::primitive::u16> for Numeric {
-            type Error = Error;
-
-            fn try_from(value: ::core::primitive::u16) -> Result<Self, Self::Error> {
-                Self::try_from_u16(value)
-            }
-        }
-
-        impl ::core::convert::TryFrom<&::core::primitive::str> for Numeric {
-            type Error = Error;
-
-            fn try_from(value: &::core::primitive::str) -> Result<Self, Self::Error> {
-                <Self as ::core::str::FromStr>::from_str(value)
-            }
-        }
-
-        impl ::core::str::FromStr for Numeric {
-            type Err = Error;
-
-            fn from_str(s: &::core::primitive::str) -> ::core::result::Result<Self, Self::Err> {
-                let s = s.trim_ascii();
-
-                if !s.is_ascii() {
-                    return Err(Error::InvalidCharset);
-                }
-
-                let s_bytes = s.as_bytes();
-                let s_len = s_bytes.len();
-                if s_len > 3 {
-                    return Err(Error::InvalidLength);
-                }
-
-                let mut src_bytes = [b' '; 3];
-
-                src_bytes[0] = s_bytes[0];
-                src_bytes[1] = s_bytes[1];
-                if (s_len == 3) {
-                    src_bytes[2] = s_bytes[2];
-                }
-                src_bytes.make_ascii_uppercase();
-
-                #[allow(unsafe_code)]
-                // SAFETY: this is safe becase we'e already established the source string is ASCII
-                let src = unsafe { ::core::primitive::str::from_utf8_unchecked(&src_bytes) };
-
-                if s_len == 2 {
-                    Self::try_from_alpha2(src.trim())
-                } else {
-                    Self::try_from_alpha3(src)
-                }
-            }
-        }
     }
 }
 
