@@ -130,14 +130,14 @@ fn m49() -> TokenStream {
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
         #[cfg_attr(feature = "serde", derive(::serde::Deserialize, ::serde::Serialize))]
         #[repr(u16)]
-        pub enum Country {
+        pub enum Numeric {
             #(
                 #[doc = #name]
                 #ident = #code,
             )*
         }
 
-        impl Country {
+        impl Numeric {
             /// Create a new country code enum value from the given Alpah2 code string.
             pub const fn try_from_alpha2(s: &::core::primitive::str) -> ::core::result::Result<Self, Error> {
                 if s.len() != 2 {
@@ -208,13 +208,13 @@ fn m49() -> TokenStream {
             }
         }
 
-        impl ::core::convert::From<Country> for ::core::primitive::u16 {
-            fn from(value: Country) -> Self {
+        impl ::core::convert::From<Numeric> for ::core::primitive::u16 {
+            fn from(value: Numeric) -> Self {
                 value.as_u16()
             }
         }
 
-        impl ::core::convert::TryFrom<::core::primitive::u16> for Country {
+        impl ::core::convert::TryFrom<::core::primitive::u16> for Numeric {
             type Error = Error;
 
             fn try_from(value: ::core::primitive::u16) -> Result<Self, Self::Error> {
@@ -222,7 +222,7 @@ fn m49() -> TokenStream {
             }
         }
 
-        impl ::core::convert::TryFrom<&::core::primitive::str> for Country {
+        impl ::core::convert::TryFrom<&::core::primitive::str> for Numeric {
             type Error = Error;
 
             fn try_from(value: &::core::primitive::str) -> Result<Self, Self::Error> {
@@ -230,7 +230,7 @@ fn m49() -> TokenStream {
             }
         }
 
-        impl ::core::str::FromStr for Country {
+        impl ::core::str::FromStr for Numeric {
             type Err = Error;
 
             fn from_str(s: &::core::primitive::str) -> ::core::result::Result<Self, Self::Err> {
