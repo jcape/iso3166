@@ -8,6 +8,8 @@
 
 This crate contains parsers and structures for easily parsing third-party distributions of of the ISO 3166 data set.
 
+[//]: # (badges)
+
 [license-image]: https://img.shields.io/github/license/jcape/iso3166?style=flat-square
 [rustc-image]: https://img.shields.io/badge/rustc-1.87+-blue.svg?style=flat-square
 [crate-image]: https://img.shields.io/crates/v/iso3166-parsers.svg?style=flat-square

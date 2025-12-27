@@ -28,6 +28,9 @@ unsafe_code = "deny"
 shared-version = true
 consolidate-commits = true
 tag-name = "v{{version}}"
+pre-release-replacements = [
+    {file="README.md", search="iso3166-[a-z-]+/[0-9.]+", replace="{{crate_name}}/{{version}}"},
+]
 
 [workspace.package]
 authors = ["James Cape <jamescape777@pm.me>"]
