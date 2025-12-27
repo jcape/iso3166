@@ -82,11 +82,67 @@ impl Visitor<'_> for NumericVisitor {
         f.write_str("An ISO3166 numeric code")
     }
 
+    fn visit_i128<E>(self, v: i128) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        let value = u16::try_from(v).map_err(E::custom)?;
+        Numeric::from_u16(value).map_err(E::custom)
+    }
+
+    fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        let value = u16::try_from(v).map_err(E::custom)?;
+        Numeric::from_u16(value).map_err(E::custom)
+    }
+
+    fn visit_i32<E>(self, v: i32) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        let value = u16::try_from(v).map_err(E::custom)?;
+        Numeric::from_u16(value).map_err(E::custom)
+    }
+
+    fn visit_i16<E>(self, v: i16) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        let value = u16::try_from(v).map_err(E::custom)?;
+        Numeric::from_u16(value).map_err(E::custom)
+    }
+
+    fn visit_u128<E>(self, v: u128) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        let value = u16::try_from(v).map_err(E::custom)?;
+        Numeric::from_u16(value).map_err(E::custom)
+    }
+
+    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        let value = u16::try_from(v).map_err(E::custom)?;
+        Numeric::from_u16(value).map_err(E::custom)
+    }
+
+    fn visit_u32<E>(self, v: u32) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        let value = u16::try_from(v).map_err(E::custom)?;
+        Numeric::from_u16(value).map_err(E::custom)
+    }
+
     fn visit_u16<E>(self, v: u16) -> Result<Self::Value, E>
     where
         E: Error,
     {
-        Numeric::try_from_u16(v).map_err(E::custom)
+        Numeric::from_u16(v).map_err(E::custom)
     }
 }
 
@@ -118,5 +174,46 @@ where
         E: Error,
     {
         Self::Value::from_str(v).map_err(|err| E::custom(err))
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::{Alpha2, Alpha3, Numeric};
+
+    const NUMERIC: Numeric = Numeric::UnitedStatesOfAmerica;
+    const NUMERIC_JSON: &str = "840";
+
+    const ALPHA2: Alpha2 = Alpha2::from_numeric(NUMERIC);
+    const ALPHA2_JSON: &str = "\"US\"";
+
+    const ALPHA3: Alpha3 = Alpha3::from_numeric(NUMERIC);
+    const ALPHA3_JSON: &str = "\"USA\"";
+
+    #[test]
+    fn numeric() {
+        let json = serde_json::to_string(&NUMERIC).expect("numeric serialization");
+        assert_eq!(NUMERIC_JSON, json);
+
+        let actual = serde_json::from_str::<Numeric>(&json).expect("numeric deserialization");
+        assert_eq!(NUMERIC, actual);
+    }
+
+    #[test]
+    fn alpha2() {
+        let json = serde_json::to_string(&ALPHA2).expect("alpha2 serialization");
+        assert_eq!(ALPHA2_JSON, json);
+
+        let actual = serde_json::from_str::<Alpha2>(&json).expect("alpha2 deserialization");
+        assert_eq!(ALPHA2, actual);
+    }
+
+    #[test]
+    fn alpha3() {
+        let json = serde_json::to_string(&ALPHA3).expect("alpha2 serialization");
+        assert_eq!(ALPHA3_JSON, json);
+
+        let actual = serde_json::from_str::<Alpha3>(&json).expect("alpha2 deserialization");
+        assert_eq!(ALPHA3, actual);
     }
 }

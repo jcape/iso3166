@@ -126,7 +126,40 @@ fn m49() -> TokenStream {
             }
         }
 
-        /// ISO 3166 Countries.
+        /// ISO 3166-1 numeric country codes.
+        ///
+        /// ## Examples
+        ///
+        /// ```rust
+        /// use core::str::FromStr;
+        /// use iso3166_static::Numeric;
+        ///
+        /// let alpha2 = Numeric::from_alpha2("US").expect("alpha2");
+        /// let alpha3 = Numeric::from_alpha3("USA").expect("alpha3");
+        /// let fromstr = Numeric::from_str("   uS ").expect("fromstr");
+        ///
+        /// assert_eq!(alpha2, alpha3);
+        /// assert_eq!(alpha3, fromstr);
+        /// ```
+        ///
+        /// Some failure conditions:
+        ///
+        /// ```rust
+        /// use core::str::FromStr;
+        /// use iso3166_static::{Error, Numeric};
+        ///
+        /// let badcode = Numeric::from_u16(12345).expect_err("not a code");
+        /// assert_eq!(Error::UnknownCode, badcode);
+        ///
+        /// let lower2 = Numeric::from_alpha2("us").expect_err("not uppercase");
+        /// assert_eq!(Error::UnknownString, lower2);
+        ///
+        /// let mixed3 = Numeric::from_alpha3("uSa").expect_err("not uppercase");
+        /// assert_eq!(Error::UnknownString, mixed3);
+        ///
+        /// let too_long = Numeric::from_str("asdf").expect_err("not a code");
+        /// assert_eq!(Error::InvalidLength, too_long);
+        /// ```
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
         #[repr(u16)]
         pub enum Numeric {
@@ -138,7 +171,7 @@ fn m49() -> TokenStream {
 
         impl Numeric {
             /// Create a new country code enum value from the given Alpah2 code string.
-            pub const fn try_from_alpha2(s: &::core::primitive::str) -> ::core::result::Result<Self, Error> {
+            pub const fn from_alpha2(s: &::core::primitive::str) -> ::core::result::Result<Self, Error> {
                 if s.len() != 2 {
                     return Err(Error::InvalidLength);
                 }
@@ -156,7 +189,7 @@ fn m49() -> TokenStream {
             }
 
             /// Create a new country code enum value from the given Alpah3 code string.
-            pub const fn try_from_alpha3(s: &::core::primitive::str) -> ::core::result::Result<Self, Error> {
+            pub const fn from_alpha3(s: &::core::primitive::str) -> ::core::result::Result<Self, Error> {
                 if s.len() != 3 {
                     return Err(Error::InvalidLength);
                 }
@@ -174,7 +207,7 @@ fn m49() -> TokenStream {
             }
 
             /// Create a new country enum from the given u16 value.
-            pub const fn try_from_u16(value: ::core::primitive::u16) -> ::core::result::Result<Self, Error> {
+            pub const fn from_u16(value: ::core::primitive::u16) -> ::core::result::Result<Self, Error> {
                 match value {
                     #(
                         #code => Ok(Self::#ident),

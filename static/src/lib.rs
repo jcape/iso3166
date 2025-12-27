@@ -13,47 +13,28 @@ use core::{
 
 iso3166_macros::generate_m49!();
 
-impl Display for Numeric {
-    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        write!(f, "{}", self.as_u16())
-    }
-}
-
-impl From<Numeric> for u16 {
-    fn from(value: Numeric) -> Self {
-        value.as_u16()
-    }
-}
-
-impl TryFrom<u16> for Numeric {
-    type Error = Error;
-
-    fn try_from(value: u16) -> Result<Self, Self::Error> {
-        Self::try_from_u16(value)
-    }
-}
-
-impl TryFrom<&str> for Numeric {
-    type Error = Error;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        <Self as FromStr>::from_str(value)
-    }
-}
-
-impl FromStr for Numeric {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let s = s.trim_ascii();
-
+impl Numeric {
+    /// Create a new value the given string.
+    ///
+    /// This method will accept strings with 2-3 consecutive ASCII alphabetic characters left- or
+    /// right-padded by ASCII whitespace. The strings in question don't need to be in a particular
+    /// case. This is used by the [`FromStr`] implementation.
+    ///
+    /// # Errors
+    ///
+    /// - [`Error::InvalidCharset`] if the given slice does not contain ASCII characters.
+    /// - [`Error::InvalidLength`] if the given slice is not 2 or 3 characters long.
+    /// - [`Error::UnknownString`] if the given slice does not match any known Alpha2 code.
+    pub const fn from_str_slice(s: &str) -> Result<Self, Error> {
         if !s.is_ascii() {
             return Err(Error::InvalidCharset);
         }
 
+        let s = s.trim_ascii();
+
         let s_bytes = s.as_bytes();
         let s_len = s_bytes.len();
-        if s_len > 3 {
+        if s_len != 2 && s_len != 3 {
             return Err(Error::InvalidLength);
         }
 
@@ -71,10 +52,46 @@ impl FromStr for Numeric {
         let src = unsafe { str::from_utf8_unchecked(&src_bytes) };
 
         if s_len == 2 {
-            Self::try_from_alpha2(src.trim())
+            Self::from_alpha2(src.trim_ascii())
         } else {
-            Self::try_from_alpha3(src)
+            Self::from_alpha3(src)
         }
+    }
+}
+
+impl Display for Numeric {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(f, "{}", self.as_u16())
+    }
+}
+
+impl From<Numeric> for u16 {
+    fn from(value: Numeric) -> Self {
+        value.as_u16()
+    }
+}
+
+impl TryFrom<u16> for Numeric {
+    type Error = Error;
+
+    fn try_from(value: u16) -> Result<Self, Self::Error> {
+        Self::from_u16(value)
+    }
+}
+
+impl TryFrom<&str> for Numeric {
+    type Error = Error;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        <Self as FromStr>::from_str(value)
+    }
+}
+
+impl FromStr for Numeric {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_str_slice(s)
     }
 }
 
@@ -90,8 +107,8 @@ impl Alpha2 {
     /// - [`Error::InvalidLength`] if the given slice is not 2 characters.
     /// - [`Error::InvalidCharset`] if the given slice does not contain ASCII characters.
     /// - [`Error::UnknownString`] if the given slice does not match any known Alpha2 code.
-    pub const fn from_str_slice(s: &str) -> Result<Self, Error> {
-        match Numeric::try_from_alpha2(s) {
+    pub const fn from_alpha2(s: &str) -> Result<Self, Error> {
+        match Numeric::from_alpha2(s) {
             Ok(value) => Ok(Self(value)),
             Err(err) => Err(err),
         }
@@ -103,7 +120,7 @@ impl Alpha2 {
     ///
     /// - [`Error::UnknownCode`] if the given code value is not a numeric code.
     pub const fn from_u16(value: u16) -> Result<Self, Error> {
-        match Numeric::try_from_u16(value) {
+        match Numeric::from_u16(value) {
             Ok(value) => Ok(Self(value)),
             Err(err) => Err(err),
         }
@@ -138,7 +155,7 @@ impl FromStr for Alpha2 {
     type Err = Error;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        Self::from_str_slice(value)
+        Self::from_alpha2(value)
     }
 }
 
@@ -146,7 +163,7 @@ impl TryFrom<&str> for Alpha2 {
     type Error = Error;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        Self::from_str_slice(value)
+        Self::from_alpha2(value)
     }
 }
 
@@ -189,13 +206,16 @@ pub struct Alpha3(Numeric);
 impl Alpha3 {
     /// Create a new value from an Alpha2 string.
     ///
+    /// This method strictly validates the given slice and only accepts valid upper-case Alpha3
+    /// codes with no padding.
+    ///
     /// # Errors
     ///
     /// - [`Error::InvalidLength`] if the given slice is not 3 characters.
-    /// - [`Error::InvalidCharset`] if the given slice does not contain ASCII characters.
+    /// - [`Error::InvalidCharset`] if the given slice contains non-ASCII-7 characters.
     /// - [`Error::UnknownString`] if the given slice does not match any known Alpha3 code.
-    pub const fn from_str_slice(s: &str) -> Result<Self, Error> {
-        match Numeric::try_from_alpha3(s) {
+    pub const fn from_alpha3(s: &str) -> Result<Self, Error> {
+        match Numeric::from_alpha3(s) {
             Ok(value) => Ok(Self(value)),
             Err(err) => Err(err),
         }
@@ -207,7 +227,7 @@ impl Alpha3 {
     ///
     /// - [`Error::UnknownCode`] if the given code value is not a numeric code.
     pub const fn from_u16(value: u16) -> Result<Self, Error> {
-        match Numeric::try_from_u16(value) {
+        match Numeric::from_u16(value) {
             Ok(value) => Ok(Self(value)),
             Err(err) => Err(err),
         }
@@ -242,7 +262,7 @@ impl FromStr for Alpha3 {
     type Err = Error;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        Self::from_str_slice(value)
+        Self::from_alpha3(value)
     }
 }
 
@@ -250,7 +270,7 @@ impl TryFrom<&str> for Alpha3 {
     type Error = Error;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        Self::from_str_slice(value)
+        Self::from_alpha3(value)
     }
 }
 
@@ -283,5 +303,87 @@ impl PartialEq<Alpha2> for Alpha3 {
 impl PartialEq<Numeric> for Alpha3 {
     fn eq(&self, other: &Numeric) -> bool {
         self.0 == *other
+    }
+}
+
+#[cfg(test)]
+mod test {
+    extern crate std;
+
+    use super::*;
+    use std::string::ToString;
+
+    const USA_EXPECTED2: &str = "US";
+    const USA_EXPECTED3: &str = "USA";
+    const USA_EXPECTED_U16: u16 = 840;
+
+    #[test]
+    fn numeric_display() {
+        let src = Numeric::UnitedStatesOfAmerica;
+
+        assert_eq!("840", src.to_string());
+    }
+
+    #[test]
+    fn numeric_u16_roundtrip() {
+        let actual = Numeric::try_from(USA_EXPECTED_U16).expect("valid u16");
+        assert_eq!(USA_EXPECTED_U16, u16::from(actual));
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED_U16, Ok(Numeric::UnitedStatesOfAmerica)},
+        unknown = {u16::MAX, Err(Error::UnknownCode)},
+        unknown2 = {123, Err(Error::UnknownCode)},
+    )]
+    fn numeric_from_u16(input: u16, expected: Result<Numeric, Error>) {
+        let actual = Numeric::try_from(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED2, Ok(Numeric::UnitedStatesOfAmerica)},
+        trim_both = {"  US  ", Err(Error::InvalidLength)},
+        unknown = {"XX", Err(Error::UnknownString)},
+    )]
+    fn numeric_from_alpha2(input: &str, expected: Result<Numeric, Error>) {
+        let actual = Numeric::from_alpha2(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED3, Ok(Numeric::UnitedStatesOfAmerica)},
+        trim_both = {"  USA  ", Err(Error::InvalidLength)},
+        unknown = {"XXX", Err(Error::UnknownString)},
+    )]
+    fn numeric_from_alpha3(input: &str, expected: Result<Numeric, Error>) {
+        let actual = Numeric::from_alpha3(input);
+        assert_eq!(expected, actual);
+    }
+
+    /// This test exercises the `FromStr` implementation of `Numeric`, which in turn exercises
+    /// [`Numeric::from_str_slice`].
+    #[yare::parameterized(
+        pass = {USA_EXPECTED3, Ok(Numeric::UnitedStatesOfAmerica)},
+        trim_both2 = {"  US   ", Ok(Numeric::UnitedStatesOfAmerica)},
+        trim_start2 = {"     US", Ok(Numeric::UnitedStatesOfAmerica)},
+        trim_end2 = {"US    ", Ok(Numeric::UnitedStatesOfAmerica)},
+        trim_both3 = {"  USA  ", Ok(Numeric::UnitedStatesOfAmerica)},
+        trim_start3 = {"      USA", Ok(Numeric::UnitedStatesOfAmerica)},
+        trim_end3 = {"USA     ", Ok(Numeric::UnitedStatesOfAmerica)},
+        unknown = {"XXX", Err(Error::UnknownString)},
+        poop = {"💩💩💩", Err(Error::InvalidCharset)},
+        length = {"XXXX", Err(Error::InvalidLength)},
+    )]
+    fn numeric_try_from_str(input: &str, expected: Result<Numeric, Error>) {
+        let actual = Numeric::try_from(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED2, Ok(Alpha2::from_numeric(Numeric::UnitedStatesOfAmerica))},
+    )]
+    fn alpha2_from_str(input: &str, expected: Result<Alpha2, Error>) {
+        let actual = Alpha2::from_str(input);
+        assert_eq!(expected, actual);
     }
 }
