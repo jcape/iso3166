@@ -95,7 +95,33 @@ impl FromStr for Numeric {
     }
 }
 
+impl From<Alpha2> for Numeric {
+    fn from(value: Alpha2) -> Self {
+        value.0
+    }
+}
+
+impl From<Alpha3> for Numeric {
+    fn from(value: Alpha3) -> Self {
+        value.0
+    }
+}
+
+impl PartialEq<Alpha2> for Numeric {
+    fn eq(&self, other: &Alpha2) -> bool {
+        self == &other.0
+    }
+}
+
+impl PartialEq<Alpha3> for Numeric {
+    fn eq(&self, other: &Alpha3) -> bool {
+        self == &other.0
+    }
+}
+
 /// A wrapper around the numeric enumeration requiring strings be Alpha-2 format.
+///
+/// When the `serde` feature is enabled, this type will be serialized as the Alpha-2 string.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Alpha2(Numeric);
 
@@ -200,6 +226,19 @@ impl PartialEq<Numeric> for Alpha2 {
 }
 
 /// A wrapper around the numeric enumeration requiring strings be Alpha-2 format.
+///
+/// When the `serde` feature is enabled, this type will be serialized as the Alpha-3 string.
+///
+/// # Examples
+///
+/// ```rust
+/// use iso3166_static::Alpha3;
+/// const ALPHA3_USA: &str = "USA";
+///
+/// let alpha3 = Alpha3::from_alpha3(ALPHA3_USA).expect("valid alpha3");
+///
+/// assert_eq!(ALPHA3_USA, alpha3.as_str());
+/// ```
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Alpha3(Numeric);
 
@@ -384,6 +423,14 @@ mod test {
     )]
     fn alpha2_from_str(input: &str, expected: Result<Alpha2, Error>) {
         let actual = Alpha2::from_str(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED3, Ok(Alpha3::from_numeric(Numeric::UnitedStatesOfAmerica))},
+    )]
+    fn alpha3_from_str(input: &str, expected: Result<Alpha3, Error>) {
+        let actual = Alpha3::from_str(input);
         assert_eq!(expected, actual);
     }
 }

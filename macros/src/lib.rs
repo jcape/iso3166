@@ -128,6 +128,9 @@ fn m49() -> TokenStream {
 
         /// ISO 3166-1 numeric country codes.
         ///
+        /// When the `serde` feature is enabled, this code will be serialized as a 16-bit unsigned
+        /// integer.
+        ///
         /// ## Examples
         ///
         /// ```rust
