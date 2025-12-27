@@ -45,6 +45,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.RELEASE_PLZ_TOKEN }}
+          persist-credentials: true
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Run release-plz
@@ -59,12 +60,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.release-plz.outputs.pr }}
+        # yamllint disable rule:line-length
         run: |
           set -e
 
           pr_number=${{ fromJSON(steps.release-plz.outputs.pr).number }}
           if [[ -n "$pr_number" ]]; then
-            releases=$(echo "$PR" | jq)
-            echo "releases = $releases"
-            echo "pr_number = $pr_number"
+
+
+            packages=$(echo $RELEASES | jq '.[].package_name' | sed -e 's/"//g')
+            version=$(echo $RELEASES | jq '.[].version' | sed -e 's/"//g' | uniq)
+
+            gh pr checkout $pr_number
+
+            for pkg in $packages; do
+                crate=$(echo $pkg | sed -e 's/iso3166-//')
+                sed -i -e "s|$pkg/[0-9.]\+|$pkg/$version|g" "$crate/README.md"
+                git add "$crate/README.md"
+            done
+
+            git commit --amend --no-edit
+            git push
           fi
+        # yamllint enable rule:line-length
