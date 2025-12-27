@@ -1,6 +1,7 @@
+---
 name: Release-plz
 
-on:
+"on":
   push:
     branches:
       - main
@@ -48,8 +49,32 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: Run release-plz
         uses: release-plz/action@v0.5
+        id: release-plz
         with:
           command: release-pr
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PLZ_TOKEN }}
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - name: Update README.mds
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.release-plz.outputs.pr }}
+          RELEASE: ${{ steps.release-plz.outputs.releases }}
+        run: |
+          set -e
+
+          echo "releases: $RELEASES"
+
+          echo "package_names: $(echo "$RELEASES" | jq -r '.[].package_name')"
+
+          release_version=$(echo "$RELEASES" | jq -r '.[0].version')
+          echo "release_version: $release_version"
+
+          pr_number=${{ fromJSON(steps.release-plz.outputs.pr).number }}
+          if [[ -n "$pr_number" ]]; then
+            #gh pr checkout $pr_number
+            # change "echo" with your commands
+            #git add .
+            #git commit -m "docs: Update README"
+            #git push
+          fi
