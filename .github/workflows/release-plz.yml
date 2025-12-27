@@ -59,16 +59,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.release-plz.outputs.pr }}
-          RELEASES: ${{ steps.release-plz.outputs.pr.releases }}
         run: |
           set -e
 
-          echo "releases: $RELEASES"
-          echo "package_names: $(echo "$RELEASES" | jq -r '.[].package_name')"
-          release_version=$(echo "$RELEASES" | jq -r '.[0].version')
-          echo "release_version: $release_version"
-
           releases=${{ fromJSON(steps.release-plz.outputs.pr).releases }}
+          echo "releases = $releases"
+
           pr_number=${{ fromJSON(steps.release-plz.outputs.pr).number }}
           if [[ -n "$pr_number" ]]; then
             echo "pr_number = $pr_number"
