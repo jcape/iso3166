@@ -66,8 +66,8 @@ jobs:
 
           pr_number=${{ fromJSON(steps.release-plz.outputs.pr).number }}
           if [[ -n "$pr_number" ]]; then
-            packages=$(echo $RELEASES | jq '.[].package_name' | sed -e 's/"//g')
-            version=$(echo $RELEASES | jq '.[].version' | sed -e 's/"//g' | uniq)
+            packages=$(echo $PR | jq '.releases.[].package_name' | sed -e 's/"//g')
+            version=$(echo $PR | jq '.releases.[].version' | sed -e 's/"//g' | uniq)
 
             gh pr checkout $pr_number
 
