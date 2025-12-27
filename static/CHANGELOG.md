@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0](https://github.com/jcape/iso3166/compare/iso3166-static-v0.1.1...iso3166-static-v0.2.0) - 2025-12-27
+
+### Added
+
+- implement display for numeric
+- implement display for alpha2, alpha3
+- [**breaking**] make numeric enum serde used the numeric code
+- add alpha2 and alpha3 types
+
+### Other
+
+- improve examples and static readme.
+- fixup badges
+- unit tests for numeric enum and serde
+- move trait impls to static from macro
+
 ## [0.1.1](https://github.com/jcape/iso3166/compare/iso3166-static-v0.1.0...iso3166-static-v0.1.1) - 2025-12-21
 
 ### Added
