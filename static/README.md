@@ -3,7 +3,7 @@
 [![Crates][crates-image]][crates-link]<!--
 -->[![Docs][docs-image]][docs-link]<!--
 -->[![Dependency Status][deps-image]][deps-link]<!--
--->![License][license-image]<!--
+-->![License][license-image]
 
 This crate provides a generated enumeration for use as an ISO 3166 code enum, and some wrapper types with more strict conventions.
 
