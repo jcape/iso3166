@@ -80,6 +80,6 @@ jobs:
             done
 
             git commit --amend --no-edit
-            git push
+            git push --force
           fi
         # yamllint enable rule:line-length
