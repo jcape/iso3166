@@ -1,8 +1,9 @@
 //! Serialization support for our types
 
-#[cfg(feature = "serde")]
-use crate::Numeric;
-use crate::{Alpha2, Alpha3};
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
+use crate::{Alpha2, Alpha3, Numeric};
 use core::{
     fmt::{Display, Formatter, Result as FmtResult},
     marker::PhantomData,
@@ -12,6 +13,9 @@ use serde::{
     Deserialize, Serialize,
     de::{Error, Visitor},
 };
+
+#[cfg(feature = "alloc")]
+use alloc::string::String;
 
 #[cfg(feature = "serde")]
 impl Serialize for Alpha2 {
@@ -167,6 +171,21 @@ where
 
     fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
         f.write_str("An ISO Alpha2 string code")
+    }
+
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        Self::Value::from_str(v).map_err(|err| E::custom(err))
+    }
+
+    #[cfg(feature = "alloc")]
+    fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        Self::Value::from_str(&v).map_err(|err| E::custom(err))
     }
 
     fn visit_borrowed_str<E>(self, v: &'de str) -> Result<Self::Value, E>

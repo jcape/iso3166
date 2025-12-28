@@ -13,6 +13,14 @@ There are three primary objects in this crate:
 - [`Alpha2`](crate::Alpha2) - A newtype wrapper which strictly enforces the use of Alpha2 strings.
 - [`Alpha3`](crate::Alpha3) - A newtype wrapper which strictly enforces the use of Alpha3 strings.
 
+## Features
+
+By default, this crate compiles with `serde` enabled, and `alloc` disabled. If your compilation enables the `alloc` feature on the `serde` crate, you should enable it here as well to prevent deserialization failures.
+
+- `default`: Enables the `serde` feature by default.
+- `alloc`: Enables the use of the `alloc` crate.
+- `serde`: Enables implementations of the [`serde::Deserialize`] and [`serde::Serialize] traits.
+
 ## Examples
 
 ```rust

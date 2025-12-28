@@ -28,8 +28,9 @@ serde_json = "1"
 yare = "3"
 
 [features]
-default = ["serde"]
+default = ["serde", "alloc"]
 serde = ["dep:serde"]
+alloc = ["serde?/alloc"]
 
 [lints]
 workspace = true
