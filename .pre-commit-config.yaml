@@ -3,7 +3,12 @@ default_install_hook_types:
   - pre-commit
   - commit-msg
 
-exclude: /(^LICENSE|^parsers\/src\/m49\/2025-09-05\.csv)/
+exclude: |-
+  (?x)^(
+    ^LICENSE
+    |^parsers\/src\/m49\/2025-09-05\.csv
+    |^parsers\/src\/lukes\/2025-12-29\.json
+  )$
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -17,9 +22,7 @@ repos:
       - id: destroyed-symlinks
       - id: detect-private-key
       - id: end-of-file-fixer
-        exclude: parsers/src/m49/2025-09-05.csv
       - id: fix-byte-order-marker
-        exclude: parsers/src/m49/2025-09-05.csv
       - id: mixed-line-ending
       - id: trailing-whitespace
   - repo: https://github.com/compilerla/conventional-pre-commit

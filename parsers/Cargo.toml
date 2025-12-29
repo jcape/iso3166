@@ -22,6 +22,7 @@ serde = { workspace = true, features = ["std"] }
 
 [dev-dependencies]
 csv.workspace = true
+serde_json.workspace = true
 
 [lints]
 workspace = true
