@@ -8,6 +8,7 @@ exclude: |-
     ^LICENSE
     |^parsers\/src\/m49\/2025-09-05\.csv
     |^parsers\/src\/lukes\/2025-12-29\.json
+    |^static\/src\/all\.json
   )$
 
 repos:

@@ -5,7 +5,7 @@
 -->[![Dependency Status][deps-image]][deps-link]<!--
 -->![License][license-image]
 
-Procedural macros used to generate static data using the parsers, particularly the UN M49 dataset.
+Procedural macros used to generate static data using data distributed by [Luke Duncalfe's ISO-3166-Countries-with-Regional-Codes](https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes).
 
 [//]: # (badges)
 

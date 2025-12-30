@@ -63,7 +63,7 @@ impl Serialize for Numeric {
     where
         S: serde::Serializer,
     {
-        serializer.serialize_u16(self.as_u16())
+        serializer.serialize_u16(*self as u16)
     }
 }
 
@@ -203,10 +203,10 @@ mod test {
     const NUMERIC: Numeric = Numeric::UnitedStatesOfAmerica;
     const NUMERIC_JSON: &str = "840";
 
-    const ALPHA2: Alpha2 = Alpha2::from_numeric(NUMERIC);
+    const ALPHA2: Alpha2 = Alpha2::UnitedStatesOfAmerica;
     const ALPHA2_JSON: &str = "\"US\"";
 
-    const ALPHA3: Alpha3 = Alpha3::from_numeric(NUMERIC);
+    const ALPHA3: Alpha3 = Alpha3::UnitedStatesOfAmerica;
     const ALPHA3_JSON: &str = "\"USA\"";
 
     #[test]

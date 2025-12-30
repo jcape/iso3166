@@ -5,13 +5,13 @@
 -->[![Dependency Status][deps-image]][deps-link]<!--
 -->![License][license-image]
 
-This crate provides a generated enumeration for use as an ISO 3166-1 code enum, and some wrapper types with more strict conventions. This crate is both no-std and no-alloc (with no need/desire to enable them), and supports serde via the `"serde"` feature.
+This crate provides generated enumerations for use as with ISO 3166-1 codes. This crate is both `no-std` and `no-alloc` (with no need/desire to enable them), and supports serde via the `"serde"` feature.
 
 There are three primary objects in this crate:
 
-- [`Numeric`](crate::Numeric) - The ISO 3166-1 numeric country codes.
-- [`Alpha2`](crate::Alpha2) - A newtype wrapper which strictly enforces the use of Alpha2 strings.
-- [`Alpha3`](crate::Alpha3) - A newtype wrapper which strictly enforces the use of Alpha3 strings.
+- [`Numeric`](crate::Numeric) - Numeric country codes.
+- [`Alpha2`](crate::Alpha2) - Two-character country codes.
+- [`Alpha3`](crate::Alpha3) - Three-character country codes.
 
 ## Features
 
@@ -19,7 +19,7 @@ By default, this crate compiles with `serde` enabled, and `alloc` disabled. If y
 
 - `default`: Enables the `serde` feature by default.
 - `alloc`: Enables the use of the `alloc` crate.
-- `serde`: Enables implementations of the [`serde::Deserialize`] and [`serde::Serialize] traits.
+- `serde`: Enables implementations of the [`serde::Deserialize`] and [`serde::Serialize`] traits.
 
 ## Examples
 
@@ -28,9 +28,9 @@ use iso3166_static::{Alpha2, Alpha3, Numeric};
 
 const USA_ALPHA2: &str = "US";
 
-let alpha2 = Alpha2::from_alpha2(USA_ALPHA2).expect("alpha2");
-let alpha3 = Alpha3::from(alpha2.clone());
-let numeric = Numeric::from(alpha3.clone());
+let alpha2 = Alpha2::try_from(USA_ALPHA2).expect("alpha2");
+let alpha3 = Alpha3::try_from(alpha2.clone()).expect("alpha3");
+let numeric = Numeric::try_from(alpha3.clone()).expect("numeric");
 
 assert_eq!(USA_ALPHA2, alpha2.as_str());
 assert_eq!(alpha2, alpha3);
@@ -44,9 +44,9 @@ use iso3166_static::{Alpha2, Alpha3, Numeric};
 
 let USA_ALPHA3: &str = "USA";
 
-let numeric = Numeric::from_str(USA_ALPHA3).expect("numeric");
-let alpha3 = Alpha3::from(numeric.clone());
-let alpha2 = Alpha2::from(numeric.clone());
+let numeric = Numeric::UnitedStatesOfAmerica;
+let alpha3 = Alpha3::try_from(numeric.clone()).expect("alpha3");
+let alpha2 = Alpha2::try_from(numeric.clone()).expect("alpha2");
 
 assert_eq!(alpha3.as_str(), USA_ALPHA3);
 assert_eq!(numeric, alpha3);
