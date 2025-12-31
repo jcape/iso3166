@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0](https://github.com/jcape/iso3166/compare/iso3166-macros-v0.2.0...iso3166-macros-v0.3.0) - 2025-12-31
+
+### Fixed
+
+- rename syrianarabrepublic to syria
+
+### Other
+
+- bring back unit tests
+- fix unused var warning
+- [**breaking**] rewrite to support user-assigned codes
+
 ## [0.2.0](https://github.com/jcape/iso3166/compare/iso3166-macros-v0.1.1...iso3166-macros-v0.2.0) - 2025-12-27
 
 ### Added

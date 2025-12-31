@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0](https://github.com/jcape/iso3166/compare/iso3166-parsers-v0.2.0...iso3166-parsers-v0.3.0) - 2025-12-31
+
+### Added
+
+- implement parser for lukes/ISO-3166-Countries-with-Regional-Codes
+
 ## [0.2.0](https://github.com/jcape/iso3166/compare/iso3166-parsers-v0.1.1...iso3166-parsers-v0.2.0) - 2025-12-27
 
 ### Added
