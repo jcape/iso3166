@@ -397,8 +397,15 @@ fn alpha2(data: &[Record]) -> TokenStream {
             ///
             /// - [`Error::UnknownCode`] when the string value is not a valid code.
             pub const fn from_str_slice(value: &str) -> Result<Self, Error> {
-                let bytes = value.as_bytes();
-                match bytes {
+                if !value.is_ascii() {
+                    return Err(Error::InvalidCharset);
+                }
+
+                if value.len() != 2 {
+                    return Err(Error::InvalidLength);
+                }
+
+                match value.as_bytes() {
                     #(
                         #alpha2_bytes => Ok(Self::#ident),
                     )*
@@ -594,8 +601,15 @@ fn alpha3(data: &[Record]) -> TokenStream {
             ///
             /// - [`Error::UnknownCode`] when the string value is not a valid alpha-3 code.
             pub const fn from_str_slice(value: &str) -> Result<Self, Error> {
-                let bytes = value.as_bytes();
-                match bytes {
+                if !value.is_ascii() {
+                    return Err(Error::InvalidCharset);
+                }
+
+                if value.len() != 3 {
+                    return Err(Error::InvalidLength);
+                }
+
+                match value.as_bytes() {
                     #(
                         #alpha3_bytes => Ok(Self::#ident),
                     )*
@@ -699,6 +713,10 @@ fn try_generate(tokens: TokenStream) -> Result<TokenStream> {
             UnknownCode,
             /// User-assigned codes cannot be converted between types.
             UserAssigned,
+            /// The string length is not a viable code.
+            InvalidLength,
+            /// The string contains non-ascii characters.
+            InvalidCharset,
         }
     };
 

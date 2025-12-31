@@ -18,6 +18,8 @@ impl Display for Error {
         match self {
             Error::UnknownCode => f.write_str("Unknown Code"),
             Error::UserAssigned => f.write_str("User Assigned"),
+            Error::InvalidLength => f.write_str("Invalid Length"),
+            Error::InvalidCharset => f.write_str("Invalid Character Set"),
         }
     }
 }
@@ -131,5 +133,98 @@ impl FromStr for Alpha3 {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Self::from_str_slice(s)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    extern crate std;
+
+    use super::*;
+    use std::string::ToString;
+
+    const USA_EXPECTED2: &str = "US";
+    const USA_EXPECTED3: &str = "USA";
+    const USA_EXPECTED_U16: u16 = 840;
+
+    #[test]
+    fn numeric_display() {
+        let src = Numeric::UnitedStatesOfAmerica;
+
+        assert_eq!("840", src.to_string());
+    }
+
+    #[test]
+    fn numeric_u16_roundtrip() {
+        let actual = Numeric::try_from(USA_EXPECTED_U16).expect("valid u16");
+        assert_eq!(USA_EXPECTED_U16, u16::from(actual));
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED_U16, Ok(Numeric::UnitedStatesOfAmerica)},
+        unknown = {u16::MAX, Err(Error::UnknownCode)},
+        unknown2 = {123, Err(Error::UnknownCode)},
+    )]
+    fn numeric_from_u16(input: u16, expected: Result<Numeric, Error>) {
+        let actual = Numeric::try_from(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {Alpha2::UnitedStatesOfAmerica, Ok(Numeric::UnitedStatesOfAmerica)},
+        user = {Alpha2::UserZZ, Err(Error::UserAssigned)},
+    )]
+    fn numeric_from_alpha2(input: Alpha2, expected: Result<Numeric, Error>) {
+        let actual = Numeric::try_from(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {Alpha3::UnitedStatesOfAmerica, Ok(Numeric::UnitedStatesOfAmerica)},
+        user = {Alpha3::UserZZZ, Err(Error::UserAssigned)},
+    )]
+    fn numeric_from_alpha3(input: Alpha3, expected: Result<Numeric, Error>) {
+        let actual = Numeric::try_from(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED2, Ok(Alpha2::UnitedStatesOfAmerica)},
+        unknown = {"QB", Err(Error::UnknownCode)},
+        length = {"USA", Err(Error::InvalidLength)},
+        poop = {"💩", Err(Error::InvalidCharset)},
+    )]
+    fn alpha2_from_str(input: &str, expected: Result<Alpha2, Error>) {
+        let actual = Alpha2::from_str(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED2, Ok(Alpha2::UnitedStatesOfAmerica)},
+        unknown = {"QB", Err(Error::UnknownCode)},
+    )]
+    fn alpha2_try_from(input: &str, expected: Result<Alpha2, Error>) {
+        let actual = Alpha2::try_from(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED3, Ok(Alpha3::UnitedStatesOfAmerica)},
+        fail = {"BBB", Err(Error::UnknownCode)},
+        length = {"USAID", Err(Error::InvalidLength)},
+        poop = {"💩", Err(Error::InvalidCharset)},
+    )]
+    fn alpha3_from_str(input: &str, expected: Result<Alpha3, Error>) {
+        let actual = Alpha3::from_str(input);
+        assert_eq!(expected, actual);
+    }
+
+    #[yare::parameterized(
+        pass = {USA_EXPECTED3, Ok(Alpha3::UnitedStatesOfAmerica)},
+        fail = {"BBB", Err(Error::UnknownCode)},
+    )]
+    fn alpha3_try_from(input: &str, expected: Result<Alpha3, Error>) {
+        let actual = Alpha3::try_from(input);
+        assert_eq!(expected, actual);
     }
 }
