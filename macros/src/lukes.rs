@@ -174,7 +174,8 @@ fn name_to_ident(name: &str) -> Ident {
             "UnitedKingdom",
         )
         .replace("TanzaniaUnitedRepublicOf", "Tanzania")
-        .replace("VenezuelaBolivarianRepublicOf", "Venezuela");
+        .replace("VenezuelaBolivarianRepublicOf", "Venezuela")
+        .replace("SyrianArabRepublic", "Syria");
 
     quote::format_ident!("{ident}")
 }
