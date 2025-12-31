@@ -12,7 +12,7 @@ use syn::{
 struct Config {
     lukes_path: PathBuf,
     lukes_span: Span,
-    include_m49: bool,
+    _include_m49: bool,
 }
 
 impl Config {
@@ -138,7 +138,7 @@ impl Config {
         Ok(Config {
             lukes_path,
             lukes_span,
-            include_m49,
+            _include_m49: include_m49,
         })
     }
 }
