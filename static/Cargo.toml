@@ -2,13 +2,7 @@
 name = "iso3166-static"
 description = "Static ISO3166 Data"
 readme = "README.md"
-categories = [
-  "data-structures",
-  "finance",
-  "internationalization",
-  "no-std",
-  "no-std::no-alloc",
-]
+categories = ["finance", "localization", "no-std", "no-std::no-alloc"]
 keywords = ["iso3166", "m49"]
 authors.workspace = true
 edition.workspace = true

@@ -2,12 +2,7 @@
 name = "iso3166-parsers"
 description = "Parsers for ISO 3166 data"
 readme = "README.md"
-categories = [
-  "data-structures",
-  "finance",
-  "internationalization",
-  "parser-implementations",
-]
+categories = ["finance", "localization", "parser-implementations"]
 keywords = ["iso3166"]
 authors.workspace = true
 edition.workspace = true
