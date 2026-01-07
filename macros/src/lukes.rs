@@ -295,6 +295,20 @@ fn numeric(config: &Config, data: &[Record]) -> Result<TokenStream> {
                     _ => Err(Error::UserAssigned),
                 }
             }
+
+            /// Determine whether a given enum value represents a user-assigned value.
+            ///
+            /// # Examples
+            ///
+            /// ```rust
+            /// use iso3166_static::Numeric;
+            ///
+            /// assert!(!Numeric::UnitedStatesOfAmerica.is_user_assigned());
+            /// assert!(Numeric::User900.is_user_assigned());
+            /// ```
+            pub const fn is_user_assigned(&self) -> bool {
+                *self as u16 >= 900 && *self as u16 <= 999
+            }
         }
 
         impl PartialEq<Alpha2> for Numeric {
@@ -459,6 +473,26 @@ fn alpha2(data: &[Record]) -> TokenStream {
                     #(
                         Self::#user_ident => #user_alpha2,
                     )*
+                }
+            }
+
+            /// Determine whether a given enum value represents a user-assigned value.
+            ///
+            /// # Examples
+            ///
+            /// ```rust
+            /// use iso3166_static::Alpha2;
+            ///
+            /// assert!(!Alpha2::UnitedStatesOfAmerica.is_user_assigned());
+            /// assert!(Alpha2::UserXX.is_user_assigned());
+            /// ```
+            pub const fn is_user_assigned(&self) -> bool {
+                match self {
+                    #(
+                        Self::#user_ident => true,
+                    )*
+
+                    _ => false,
                 }
             }
         }
@@ -663,6 +697,26 @@ fn alpha3(data: &[Record]) -> TokenStream {
                     #(
                         Self::#user_ident => #user_alpha3,
                     )*
+                }
+            }
+
+            /// Determine whether a given enum value represents a user-assigned value.
+            ///
+            /// # Examples
+            ///
+            /// ```rust
+            /// use iso3166_static::Alpha3;
+            ///
+            /// assert!(!Alpha3::UnitedStatesOfAmerica.is_user_assigned());
+            /// assert!(Alpha3::UserZZZ.is_user_assigned());
+            /// ```
+            pub const fn is_user_assigned(&self) -> bool {
+                match self {
+                    #(
+                        Self::#user_ident => true,
+                    )*
+
+                    _ => false,
                 }
             }
         }
