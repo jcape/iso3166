@@ -9,10 +9,10 @@ Procedural macros used to generate static data using data distributed by [Luke D
 
 [//]: # (badges)
 
-[crates-image]: <https://img.shields.io/crates/v/iso3166-macros?style=for-the-badge>
+[crates-image]: <https://img.shields.io/crates/v/iso3166-macros?style=flat-square>
 [crates-link]: <https://crates.io/crates/iso3166-macros/0.3.1>
-[docs-image]: <https://img.shields.io/docsrs/iso3166-macros/0.3.1?style=for-the-badge>
+[docs-image]: <https://img.shields.io/docsrs/iso3166-macros/0.3.1?style=flat-square>
 [docs-link]: <https://docs.rs/iso3166-macros/0.3.1/iso3166_macros/>
-[deps-image]: <https://img.shields.io/deps-rs/iso3166-macros/0.3.1?style=for-the-badge>
+[deps-image]: <https://img.shields.io/deps-rs/iso3166-macros/0.3.1?style=flat-square>
 [deps-link]: <https://deps.rs/crate/iso3166-macros/0.3.1>
-[license-image]: https://img.shields.io/github/license/jcape/iso3166?style=for-the-badge
+[license-image]: https://img.shields.io/github/license/jcape/iso3166?style=flat-square

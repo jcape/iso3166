@@ -9,10 +9,10 @@ This crate contains parsers and structures for easily parsing third-party distri
 
 [//]: # (badges)
 
-[crate-image]: https://img.shields.io/crates/v/iso3166-parsers.svg?style=for-the-badge
+[crate-image]: https://img.shields.io/crates/v/iso3166-parsers.svg?style=flat-square
 [crate-link]: https://crates.io/crates/iso3166-parsers
-[docs-image]: https://img.shields.io/docsrs/iso3166-parsers?style=for-the-badge
+[docs-image]: https://img.shields.io/docsrs/iso3166-parsers?style=flat-square
 [docs-link]: https://docs.rs/crate/iso3166-parsers
-[deps-image]: https://deps.rs/crate/iso3166-parsers/0.3.1/status.svg?style=for-the-badge
+[deps-image]: https://deps.rs/crate/iso3166-parsers/0.3.1/status.svg?style=flat-square
 [deps-link]: https://deps.rs/crate/iso3166-parsers/0.3.1
-[license-image]: https://img.shields.io/github/license/jcape/iso3166?style=for-the-badge
+[license-image]: https://img.shields.io/github/license/jcape/iso3166?style=flat-square

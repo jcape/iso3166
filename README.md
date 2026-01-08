@@ -17,12 +17,12 @@ A collection of crates utilities and support for ISO 3166 countries and regions.
 [//]: # (badges)
 
 [license-link]: LICENSE
-[license-image]: https://img.shields.io/github/license/jcape/iso3166?style=for-the-badge
-[deps-image]: https://deps.rs/repo/github/jcape/iso3166/status.svg?style=for-the-badge
+[license-image]: https://img.shields.io/github/license/jcape/iso3166?style=flat-square
+[deps-image]: https://deps.rs/repo/github/jcape/iso3166/status.svg?style=flat-square
 [deps-link]: https://deps.rs/repo/github/jcape/iso3166
-[codecov-image]: https://img.shields.io/codecov/c/github/jcape/iso3166/main?style=for-the-badge
+[codecov-image]: https://img.shields.io/codecov/c/github/jcape/iso3166/main?style=flat-square
 [codecov-link]: https://codecov.io/gh/jcape/iso3166
-[gha-image]: https://img.shields.io/github/actions/workflow/status/jcape/iso3166/ci.yml?branch=main&style=for-the-badge
+[gha-image]: https://img.shields.io/github/actions/workflow/status/jcape/iso3166/ci.yml?branch=main&style=flat-square
 [gha-link]: https://github.com/jcape/iso3166/actions/workflows/ci.yml?query=branch%3Amain
 [conduct-link]: CODE_OF_CONDUCT.md
-[conduct-image]: https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=for-the-badge
+[conduct-image]: https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=flat-square
