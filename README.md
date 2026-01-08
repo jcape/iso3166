@@ -25,4 +25,4 @@ A collection of crates utilities and support for ISO 3166 countries and regions.
 [gha-image]: https://img.shields.io/github/actions/workflow/status/jcape/iso3166/ci.yml?branch=main&style=flat-square
 [gha-link]: https://github.com/jcape/iso3166/actions/workflows/ci.yml?query=branch%3Amain
 [conduct-link]: CODE_OF_CONDUCT.md
-[conduct-image]: https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=flat-square
+[conduct-image]: https://img.shields.io/badge/CC-3.0-4baaaa.svg?style=flat-square
