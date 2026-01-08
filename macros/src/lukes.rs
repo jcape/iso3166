@@ -229,6 +229,7 @@ fn numeric(config: &Config, data: &[Record]) -> Result<TokenStream> {
     let mut retval = quote::quote! {
         /// ISO 3166-1 Numeric Country Codes.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[non_exhaustive]
         #[repr(u16)]
         pub enum Numeric {
             #(
@@ -393,6 +394,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
     quote::quote! {
         /// ISO 3166-1 Alpha-2 Country Codes.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[non_exhaustive]
         pub enum Alpha2 {
             #(
                 #[doc = #doc]
@@ -618,6 +620,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
     quote::quote! {
         /// ISO 3166-1 Alpha-3 Country Codes.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[non_exhaustive]
         pub enum Alpha3 {
             #(
                 #[doc = #doc]
