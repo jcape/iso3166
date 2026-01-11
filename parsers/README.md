@@ -13,6 +13,6 @@ This crate contains parsers and structures for easily parsing third-party distri
 [crate-link]: https://crates.io/crates/iso3166-parsers
 [docs-image]: https://img.shields.io/docsrs/iso3166-parsers?style=flat-square
 [docs-link]: https://docs.rs/crate/iso3166-parsers
-[deps-image]: https://deps.rs/crate/iso3166-parsers/0.3.1/status.svg?style=flat-square
-[deps-link]: https://deps.rs/crate/iso3166-parsers/0.3.1
+[deps-image]: https://deps.rs/crate/iso3166-parsers/0.4.0/status.svg?style=flat-square
+[deps-link]: https://deps.rs/crate/iso3166-parsers/0.4.0
 [license-image]: https://img.shields.io/github/license/jcape/iso3166?style=flat-square

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0](https://github.com/jcape/iso3166/compare/iso3166-macros-v0.3.1...iso3166-macros-v0.4.0) - 2026-01-11
+
+### Added
+
+- [**breaking**] mark enums as non_exhaustive
+- add is_user_assigned() methods
+
+### Other
+
+- use flat-square badges
+
 ## [0.3.1](https://github.com/jcape/iso3166/compare/iso3166-macros-v0.3.0...iso3166-macros-v0.3.1) - 2026-01-03
 
 ### Other
