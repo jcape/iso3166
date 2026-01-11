@@ -8,6 +8,7 @@ cargo binstall -q -y --force action-validator
 cargo binstall -q -y --force cargo-deny
 cargo binstall -q -y --force cargo-llvm-cov
 cargo binstall -q -y --force cargo-semver-checks
+cargo binstall -q -y --force cargo-nextest
 cargo binstall -q -y --force release-plz
 
 pushd /workspaces/iso3166 >/dev/null
