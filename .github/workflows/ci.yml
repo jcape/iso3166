@@ -139,6 +139,9 @@ jobs:
           cargo nextest run \
             --workspace \
             --profile ci
+          cargo test \
+            --workspace \
+            --doc
       - uses: codecov/codecov-action@v5
         with:
           report_type: test_results
@@ -168,6 +171,7 @@ jobs:
           cargo +nightly llvm-cov \
             --no-report \
             --workspace \
+            --all-features \
             --doc
           cargo llvm-cov report \
             --doctests \
