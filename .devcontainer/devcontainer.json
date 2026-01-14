@@ -46,9 +46,9 @@
     "ghcr.io/devcontainers/features/git-lfs:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/rust:1": {
-      "profile": "complete"
-    },
-    "ghcr.io/devcontainers-extra/features/pre-commit:2": {}
+      "profile": "complete",
+      "version": "1.88.0"
+    }
   },
   "name": "iso3166",
   "privileged": true,
