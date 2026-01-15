@@ -2,8 +2,7 @@
 
 [![Crates][crates-image]][crates-link]<!--
 -->[![Docs][docs-image]][docs-link]<!--
--->[![Dependency Status][deps-image]][deps-link]<!--
--->![License][license-image]
+-->![MSRV 1.88.0][msrv-image]
 
 This crate provides generated enumerations for use as with ISO 3166-1 codes. This crate is both `no-std` and `no-alloc` (with no need/desire to enable them), and supports serde via the `"serde"` feature.
 
@@ -60,6 +59,4 @@ assert_eq!(alpha3, alpha2);
 [crates-link]: <https://crates.io/crates/iso3166-static/0.4.0>
 [docs-image]: <https://img.shields.io/docsrs/iso3166-static/0.4.0?style=flat-square>
 [docs-link]: <https://docs.rs/iso3166-static/0.4.0/iso3166_static/>
-[deps-image]: <https://img.shields.io/deps-rs/iso3166-static/0.4.0?style=flat-square>
-[deps-link]: <https://deps.rs/crate/iso3166-static/0.4.0>
-[license-image]: <https://img.shields.io/crates/l/iso3166-static?style=flat-square>
+[msrv-image]: https://img.shields.io/crates/msrv/iso3166-static/0.4.0?style=for-the-badge

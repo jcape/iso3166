@@ -2,17 +2,14 @@
 
 [![Crates][crates-image]][crates-link]<!--
 -->[![Docs][docs-image]][docs-link]<!--
--->[![Dependency Status][deps-image]][deps-link]<!--
--->![License][license-image]
+-->![MSRV 1.88.0][msrv-image]
 
 Procedural macros used to generate static data using data distributed by [Luke Duncalfe's ISO-3166-Countries-with-Regional-Codes](https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes).
 
 [//]: # (badges)
 
-[crates-image]: <https://img.shields.io/crates/v/iso3166-macros?style=flat-square>
+[crates-image]: <https://img.shields.io/crates/v/iso3166-macros?style=for-the-badge>
 [crates-link]: <https://crates.io/crates/iso3166-macros/0.4.0>
-[docs-image]: <https://img.shields.io/docsrs/iso3166-macros/0.4.0?style=flat-square>
+[docs-image]: <https://img.shields.io/docsrs/iso3166-macros/0.4.0?style=for-the-badge>
 [docs-link]: <https://docs.rs/iso3166-macros/0.4.0/iso3166_macros/>
-[deps-image]: <https://img.shields.io/deps-rs/iso3166-macros/0.4.0?style=flat-square>
-[deps-link]: <https://deps.rs/crate/iso3166-macros/0.4.0>
-[license-image]: https://img.shields.io/github/license/jcape/iso3166?style=flat-square
+[msrv-image]: https://img.shields.io/crates/msrv/iso3166-macros?style=for-the-badge
