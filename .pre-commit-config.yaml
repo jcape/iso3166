@@ -53,6 +53,10 @@ repos:
     hooks:
       - id: cargo-deny
         args: ["--all-features", "check"]
+  - repo: https://github.com/fidgetingbits/pre-commit-statix.git
+    rev: v1.0.0
+    hooks:
+      - id: statix-fix
   - repo: local
     hooks:
       - id: cargo-fmt
