@@ -35,9 +35,7 @@ pre-release-replacements = [
 [workspace.package]
 authors = ["James Cape <jamescape777@pm.me>"]
 edition = "2024"
-homepage = "https://github.com/jcape/iso3166"
 license = "Apache-2.0"
-readme = "README.md"
 repository = "https://github.com/jcape/iso3166"
 rust-version = "1.88.0"
 version = "0.4.1"
