@@ -186,7 +186,7 @@ jobs:
             --workspace \
             --all-features \
             --doc
-          cargo +1.88.0 llvm-cov report \
+          cargo +nightly llvm-cov report \
             --doctests \
             --lcov \
             --output-path lcov.info
