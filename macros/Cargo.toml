@@ -1,13 +1,11 @@
 [package]
 name = "iso3166-macros"
 description = "Procedural Macros for ISO 3166"
-readme = "README.md"
 categories = ["finance", "localization"]
 keywords = ["iso3166", "proc-macro"]
 authors.workspace = true
 edition.workspace = true
 version.workspace = true
-homepage.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true

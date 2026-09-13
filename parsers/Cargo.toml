@@ -1,13 +1,11 @@
 [package]
 name = "iso3166-parsers"
 description = "Parsers for ISO 3166 data"
-readme = "README.md"
 categories = ["finance", "localization", "parser-implementations"]
 keywords = ["iso3166"]
 authors.workspace = true
 edition.workspace = true
 version.workspace = true
-homepage.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
