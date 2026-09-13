@@ -90,7 +90,7 @@ edition = "2024"
 license = "Apache-2.0"
 repository = "https://github.com/jcape/iso3166"
 rust-version = "1.88.0"
-version = "0.4.1"
+version = "0.4.2"
 
 [profile.release]
 lto = true
