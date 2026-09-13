@@ -1,4 +1,4 @@
-//! Static ISO 3166 Data
+//! Static ISO 3166 Data.
 
 #![cfg_attr(doc, doc = include_str!("../README.md"))]
 #![no_std]
@@ -14,6 +14,7 @@ use core::{
 iso3166_macros::generate!(lukes_json = "all.json");
 
 impl Display for Error {
+    #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
             Error::UnknownCode => f.write_str("Unknown Code"),
@@ -25,12 +26,14 @@ impl Display for Error {
 }
 
 impl Display for Numeric {
+    #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         write!(f, "{}", *self as u16)
     }
 }
 
 impl From<Numeric> for u16 {
+    #[inline]
     fn from(value: Numeric) -> Self {
         value as u16
     }
@@ -39,6 +42,7 @@ impl From<Numeric> for u16 {
 impl TryFrom<u16> for Numeric {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: u16) -> Result<Self, Self::Error> {
         Self::from_u16(value)
     }
@@ -47,6 +51,7 @@ impl TryFrom<u16> for Numeric {
 impl TryFrom<Alpha2> for Numeric {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: Alpha2) -> Result<Self, Self::Error> {
         Self::from_alpha2(value)
     }
@@ -55,12 +60,14 @@ impl TryFrom<Alpha2> for Numeric {
 impl TryFrom<Alpha3> for Numeric {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: Alpha3) -> Result<Self, Self::Error> {
         Self::from_alpha3(value)
     }
 }
 
 impl Display for Alpha2 {
+    #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         f.write_str(self.as_str())
     }
@@ -69,6 +76,7 @@ impl Display for Alpha2 {
 impl TryFrom<Numeric> for Alpha2 {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: Numeric) -> Result<Self, Self::Error> {
         Self::from_numeric(value)
     }
@@ -77,6 +85,7 @@ impl TryFrom<Numeric> for Alpha2 {
 impl TryFrom<Alpha3> for Alpha2 {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: Alpha3) -> Result<Self, Self::Error> {
         Self::from_alpha3(value)
     }
@@ -85,6 +94,7 @@ impl TryFrom<Alpha3> for Alpha2 {
 impl TryFrom<&str> for Alpha2 {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         Self::from_str_slice(value)
     }
@@ -93,12 +103,14 @@ impl TryFrom<&str> for Alpha2 {
 impl FromStr for Alpha2 {
     type Err = Error;
 
+    #[inline]
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Self::from_str_slice(s)
     }
 }
 
 impl Display for Alpha3 {
+    #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         f.write_str(self.as_str())
     }
@@ -107,6 +119,7 @@ impl Display for Alpha3 {
 impl TryFrom<Numeric> for Alpha3 {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: Numeric) -> Result<Self, Self::Error> {
         Self::from_numeric(value)
     }
@@ -115,6 +128,7 @@ impl TryFrom<Numeric> for Alpha3 {
 impl TryFrom<Alpha2> for Alpha3 {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: Alpha2) -> Result<Self, Self::Error> {
         Self::from_alpha2(value)
     }
@@ -123,6 +137,7 @@ impl TryFrom<Alpha2> for Alpha3 {
 impl TryFrom<&str> for Alpha3 {
     type Error = Error;
 
+    #[inline]
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         Self::from_str_slice(value)
     }
@@ -131,6 +146,7 @@ impl TryFrom<&str> for Alpha3 {
 impl FromStr for Alpha3 {
     type Err = Error;
 
+    #[inline]
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Self::from_str_slice(s)
     }

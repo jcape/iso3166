@@ -5,6 +5,7 @@ mod lukes;
 use proc_macro::TokenStream;
 
 /// Generate the relevant types from the provided source data.
+#[expect(clippy::single_call_fn, reason = "Proc macro.")]
 #[proc_macro]
 pub fn generate(input: TokenStream) -> TokenStream {
     lukes::generate(input.into()).into()

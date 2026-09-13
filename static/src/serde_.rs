@@ -1,4 +1,4 @@
-//! Serialization support for our types
+//! Serialization support for our types.
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
@@ -19,6 +19,7 @@ use alloc::string::String;
 
 #[cfg(feature = "serde")]
 impl Serialize for Alpha2 {
+    #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
@@ -29,6 +30,7 @@ impl Serialize for Alpha2 {
 
 #[cfg(feature = "serde")]
 impl<'de> Deserialize<'de> for Alpha2 {
+    #[inline]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
@@ -39,6 +41,7 @@ impl<'de> Deserialize<'de> for Alpha2 {
 
 #[cfg(feature = "serde")]
 impl Serialize for Alpha3 {
+    #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
@@ -49,6 +52,7 @@ impl Serialize for Alpha3 {
 
 #[cfg(feature = "serde")]
 impl<'de> Deserialize<'de> for Alpha3 {
+    #[inline]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
@@ -59,6 +63,7 @@ impl<'de> Deserialize<'de> for Alpha3 {
 
 #[cfg(feature = "serde")]
 impl Serialize for Numeric {
+    #[inline]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
@@ -69,6 +74,7 @@ impl Serialize for Numeric {
 
 #[cfg(feature = "serde")]
 impl<'de> Deserialize<'de> for Numeric {
+    #[inline]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
@@ -77,13 +83,14 @@ impl<'de> Deserialize<'de> for Numeric {
     }
 }
 
+/// A serde deserialization visitor.
 struct NumericVisitor;
 
 impl Visitor<'_> for NumericVisitor {
     type Value = Numeric;
 
-    fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
-        f.write_str("An ISO3166 numeric code")
+    fn expecting(&self, formatter: &mut Formatter<'_>) -> FmtResult {
+        formatter.write_str("An ISO3166 numeric code")
     }
 
     fn visit_i128<E>(self, v: i128) -> Result<Self::Value, E>
@@ -150,7 +157,9 @@ impl Visitor<'_> for NumericVisitor {
     }
 }
 
+/// A generic string visitor.
 struct StrVisitor<T> {
+    /// Consuming the type.
     _phantom: PhantomData<T>,
 }
 
@@ -169,8 +178,8 @@ where
 {
     type Value = T;
 
-    fn expecting(&self, f: &mut Formatter<'_>) -> FmtResult {
-        f.write_str("An ISO Alpha2 string code")
+    fn expecting(&self, formatter: &mut Formatter<'_>) -> FmtResult {
+        formatter.write_str("An ISO Alpha2 string code")
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>

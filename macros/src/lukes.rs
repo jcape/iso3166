@@ -21,7 +21,7 @@ struct Config {
 
 impl Config {
     /// Build the configuration from the given macro arguments.
-    #[expect(clippy::too_many_lines)]
+    #[expect(clippy::too_many_lines, clippy::single_call_fn, reason = "Clean code.")]
     fn build(args: &Punctuated<Meta, Comma>) -> Result<Self> {
         let manifest_dir = env::var("CARGO_MANIFEST_DIR")
             .map_err(|_error| Error::new_spanned(args, "CARGO_MANIFEST_DIR not defined"))?;
@@ -187,7 +187,7 @@ fn name_to_ident(name: &str) -> Ident {
 }
 
 /// The primary method to output the `Numeric` enum.
-#[expect(clippy::too_many_lines)]
+#[expect(clippy::too_many_lines, clippy::single_call_fn, reason = "Clean code.")]
 fn numeric(config: &Config, data: &[Record]) -> Result<TokenStream> {
     let mut ident = Vec::new();
     let mut code = Vec::new();
@@ -346,7 +346,7 @@ fn numeric(config: &Config, data: &[Record]) -> Result<TokenStream> {
 }
 
 /// The primary function to emit the `Alpha2` enum.
-#[expect(clippy::too_many_lines)]
+#[expect(clippy::too_many_lines, clippy::single_call_fn, reason = "Clean code.")]
 fn alpha2(data: &[Record]) -> TokenStream {
     let mut ident = Vec::new();
     let mut doc = Vec::new();
@@ -552,7 +552,7 @@ fn make_user_alpha3(pos1: char, pos2: char, pos3: char) -> (Ident, String, Strin
 }
 
 /// The primary method to generate the `Alpha3` enum.
-#[expect(clippy::too_many_lines)]
+#[expect(clippy::too_many_lines, clippy::single_call_fn, reason = "Clean code.")]
 fn alpha3(data: &[Record]) -> TokenStream {
     let mut ident = Vec::new();
     let mut doc = Vec::new();
@@ -773,6 +773,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
 }
 
 /// The top-level fallible generation function.
+#[expect(clippy::single_call_fn, reason = "Clean code.")]
 fn try_generate(tokens: TokenStream) -> Result<TokenStream> {
     let config = Punctuated::<Meta, Token![,]>::parse_terminated
         .parse2(tokens)
@@ -815,6 +816,10 @@ fn try_generate(tokens: TokenStream) -> Result<TokenStream> {
 }
 
 /// The top-level infallible macro entry point.
+#[expect(
+    clippy::single_call_fn,
+    reason = "Separating proc_macro1 from proc_macro2."
+)]
 pub(crate) fn generate(tokens: TokenStream) -> TokenStream {
     try_generate(tokens).expect("Could not generate output")
 }
