@@ -1,4 +1,4 @@
-//! Procedural Macros for generating ISO 3166 enumerations and structures
+//! Procedural Macros for generating ISO 3166 enumerations and structures.
 
 mod lukes;
 

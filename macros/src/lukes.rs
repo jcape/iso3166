@@ -9,17 +9,22 @@ use syn::{
     punctuated::Punctuated, token::Comma,
 };
 
+/// The configuration for parsing Luke Duncalfe's JSON.
 struct Config {
+    /// The path to the JSON file.
     lukes_path: PathBuf,
+    /// The configuration span.
     lukes_span: Span,
+    /// Whether UN M49 data should be included.
     _include_m49: bool,
 }
 
 impl Config {
-    #[allow(clippy::too_many_lines)]
+    /// Build the configuration from the given macro arguments.
+    #[expect(clippy::too_many_lines)]
     fn build(args: &Punctuated<Meta, Comma>) -> Result<Self> {
         let manifest_dir = env::var("CARGO_MANIFEST_DIR")
-            .map_err(|_| Error::new_spanned(args, "CARGO_MANIFEST_DIR not defined"))?;
+            .map_err(|_error| Error::new_spanned(args, "CARGO_MANIFEST_DIR not defined"))?;
         let mut lukes_path = Option::<PathBuf>::None;
         let mut include_m49 = Option::<bool>::None;
         let mut lukes_span = Option::<Span>::None;
@@ -83,9 +88,9 @@ impl Config {
                                 Lit::Str(lit_str) => {
                                     // FIXME: Figure out how to get the relative path to the calling
                                     //        location.
-                                    let mut lp = PathBuf::from(&manifest_dir);
-                                    lp.push("src");
-                                    lp.push(lit_str.value());
+                                    let lp = PathBuf::from(&manifest_dir)
+                                        .join("src")
+                                        .join(lit_str.value());
 
                                     lukes_path = Some(lp);
                                     lukes_span = Some(lit_str.span());
@@ -143,6 +148,7 @@ impl Config {
     }
 }
 
+/// A helper function to convert a country name into an identifier suitable for enum use.
 fn name_to_ident(name: &str) -> Ident {
     let ident = name
         .trim()
@@ -180,7 +186,8 @@ fn name_to_ident(name: &str) -> Ident {
     quote::format_ident!("{ident}")
 }
 
-#[allow(clippy::too_many_lines)]
+/// The primary method to output the `Numeric` enum.
+#[expect(clippy::too_many_lines)]
 fn numeric(config: &Config, data: &[Record]) -> Result<TokenStream> {
     let mut ident = Vec::new();
     let mut code = Vec::new();
@@ -338,7 +345,8 @@ fn numeric(config: &Config, data: &[Record]) -> Result<TokenStream> {
     Ok(retval)
 }
 
-#[allow(clippy::too_many_lines)]
+/// The primary function to emit the `Alpha2` enum.
+#[expect(clippy::too_many_lines)]
 fn alpha2(data: &[Record]) -> TokenStream {
     let mut ident = Vec::new();
     let mut doc = Vec::new();
@@ -413,6 +421,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
             /// # Errors
             ///
             /// - [`Error::UnknownCode`] when the string value is not a valid code.
+            #[inline]
             pub const fn from_str_slice(value: &str) -> Result<Self, Error> {
                 if !value.is_ascii() {
                     return Err(Error::InvalidCharset);
@@ -441,6 +450,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
             ///
             /// - [`Error::UserAssigned`] when the numeric value is unassigned and cannot be
             ///   converted.
+            #[inline]
             pub const fn from_numeric(value: Numeric) -> Result<Self, Error> {
                 match value {
                     #(
@@ -456,6 +466,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
             ///
             /// - [`Error::UserAssigned`] when the numeric value is unassigned and cannot be
             ///   converted.
+            #[inline]
             pub const fn from_alpha3(value: Alpha3) -> Result<Self, Error> {
                 match value {
                     #(
@@ -466,6 +477,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
             }
 
             /// Get the string representation of the given Alpha-2 code.
+            #[inline]
             pub const fn as_str(&self) -> &'static str {
                 match self {
                     #(
@@ -488,6 +500,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
             /// assert!(!Alpha2::UnitedStatesOfAmerica.is_user_assigned());
             /// assert!(Alpha2::UserXX.is_user_assigned());
             /// ```
+            #[inline]
             pub const fn is_user_assigned(&self) -> bool {
                 match self {
                     #(
@@ -500,6 +513,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
         }
 
         impl PartialEq<Numeric> for Alpha2 {
+            #[inline]
             fn eq(&self, other: &Numeric) -> bool {
                 match self {
                     #(
@@ -511,6 +525,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
         }
 
         impl PartialEq<Alpha3> for Alpha2 {
+            #[inline]
             fn eq(&self, other: &Alpha3) -> bool {
                 match self {
                     #(
@@ -523,6 +538,7 @@ fn alpha2(data: &[Record]) -> TokenStream {
     }
 }
 
+/// A helper function to generate user-specified alpha3 codes.
 fn make_user_alpha3(pos1: char, pos2: char, pos3: char) -> (Ident, String, String) {
     let mut alpha3 = String::new();
     alpha3.push(pos1);
@@ -535,7 +551,8 @@ fn make_user_alpha3(pos1: char, pos2: char, pos3: char) -> (Ident, String, Strin
     (ident, doc, alpha3)
 }
 
-#[allow(clippy::too_many_lines)]
+/// The primary method to generate the `Alpha3` enum.
+#[expect(clippy::too_many_lines)]
 fn alpha3(data: &[Record]) -> TokenStream {
     let mut ident = Vec::new();
     let mut doc = Vec::new();
@@ -638,6 +655,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
             /// # Errors
             ///
             /// - [`Error::UnknownCode`] when the string value is not a valid alpha-3 code.
+            #[inline]
             pub const fn from_str_slice(value: &str) -> Result<Self, Error> {
                 if !value.is_ascii() {
                     return Err(Error::InvalidCharset);
@@ -666,6 +684,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
             ///
             /// - [`Error::UserAssigned`] when the numeric value is unassigned and cannot be
             ///   converted.
+            #[inline]
             pub const fn from_numeric(value: Numeric) -> Result<Self, Error> {
                 match value {
                     #(
@@ -681,6 +700,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
             ///
             /// - [`Error::UserAssigned`] when the numeric value is unassigned and cannot be
             ///   converted.
+            #[inline]
             pub const fn from_alpha2(value: Alpha2) -> Result<Self, Error> {
                 match value {
                     #(
@@ -691,6 +711,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
             }
 
             /// Get the string representation of the given Alpha-3 code.
+            #[inline]
             pub const fn as_str(&self) -> &'static str {
                 match self {
                     #(
@@ -713,6 +734,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
             /// assert!(!Alpha3::UnitedStatesOfAmerica.is_user_assigned());
             /// assert!(Alpha3::UserZZZ.is_user_assigned());
             /// ```
+            #[inline]
             pub const fn is_user_assigned(&self) -> bool {
                 match self {
                     #(
@@ -725,6 +747,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
         }
 
         impl PartialEq<Numeric> for Alpha3 {
+            #[inline]
             fn eq(&self, other: &Numeric) -> bool {
                 match self {
                     #(
@@ -736,6 +759,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
         }
 
         impl PartialEq<Alpha2> for Alpha3 {
+            #[inline]
             fn eq(&self, other: &Alpha2) -> bool {
                 match self {
                     #(
@@ -748,6 +772,7 @@ fn alpha3(data: &[Record]) -> TokenStream {
     }
 }
 
+/// The top-level fallible generation function.
 fn try_generate(tokens: TokenStream) -> Result<TokenStream> {
     let config = Punctuated::<Meta, Token![,]>::parse_terminated
         .parse2(tokens)
@@ -789,6 +814,7 @@ fn try_generate(tokens: TokenStream) -> Result<TokenStream> {
     Ok(retval)
 }
 
+/// The top-level infallible macro entry point.
 pub(crate) fn generate(tokens: TokenStream) -> TokenStream {
     try_generate(tokens).expect("Could not generate output")
 }
