@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.3](https://github.com/jcape/iso3166/compare/iso3166-parsers-v0.4.2...iso3166-parsers-v0.4.3) - 2026-10-04
+
+### Other
+
+- *(dev)* add taplo configuration
+
 ## [0.4.2](https://github.com/jcape/iso3166/compare/iso3166-parsers-v0.4.1...iso3166-parsers-v0.4.2) - 2026-09-13
 
 ### Fixed

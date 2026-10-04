@@ -56,7 +56,7 @@ assert_eq!(alpha3, alpha2);
 [//]: # (badges)
 
 [crates-image]: <https://img.shields.io/crates/v/iso3166-static?style=flat-square>
-[crates-link]: <https://crates.io/crates/iso3166-static/0.4.2>
-[docs-image]: <https://img.shields.io/docsrs/iso3166-static/0.4.2?style=flat-square>
-[docs-link]: <https://docs.rs/iso3166-static/0.4.2/iso3166_static/>
-[msrv-image]: https://img.shields.io/crates/msrv/iso3166-static/0.4.2?style=for-the-badge
+[crates-link]: <https://crates.io/crates/iso3166-static/0.4.3>
+[docs-image]: <https://img.shields.io/docsrs/iso3166-static/0.4.3?style=flat-square>
+[docs-link]: <https://docs.rs/iso3166-static/0.4.3/iso3166_static/>
+[msrv-image]: https://img.shields.io/crates/msrv/iso3166-static/0.4.3?style=for-the-badge
