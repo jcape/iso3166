@@ -1,14 +1,14 @@
 [package]
-name = "iso3166-static"
-description = "Static ISO3166 Data"
-categories = ["finance", "localization", "no-std", "no-std::no-alloc"]
-keywords = ["iso3166", "m49"]
 authors.workspace = true
+categories = ["finance", "localization", "no-std", "no-std::no-alloc"]
+description = "Static ISO3166 Data"
 edition.workspace = true
-version.workspace = true
+keywords = ["iso3166", "m49"]
 license.workspace = true
+name = "iso3166-static"
 repository.workspace = true
 rust-version.workspace = true
+version.workspace = true
 
 [dependencies]
 iso3166-macros.workspace = true
@@ -20,9 +20,9 @@ serde_json.workspace = true
 yare = "3"
 
 [features]
-default = ["serde", "alloc"]
-serde = ["dep:serde"]
 alloc = ["serde?/alloc"]
+default = ["alloc", "serde"]
+serde = ["dep:serde"]
 
 [lints]
 workspace = true
