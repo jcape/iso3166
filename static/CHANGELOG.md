@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.4](https://github.com/jcape/iso3166/compare/iso3166-static-v0.4.3...iso3166-static-v0.4.4) - 2026-10-07
+
+### Other
+
+- install and run taplo on ci and pre-commit
+
 ## [0.4.3](https://github.com/jcape/iso3166/compare/iso3166-static-v0.4.2...iso3166-static-v0.4.3) - 2026-10-04
 
 ### Other
