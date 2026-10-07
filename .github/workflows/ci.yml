@@ -22,8 +22,9 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v7
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
         with:
+          toolchain: stable
           components: rustfmt
       - uses: r7kamura/rust-problem-matchers@v1
       - run: cargo fmt --all -- --check
@@ -38,6 +39,21 @@ jobs:
           yamllint_comment: true
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  no-std-check:
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de
+        with:
+          toolchain: nightly
+          components: rustfmt
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-no-std-check
+      - run: cargo +nightly no-std-check --manifest-path static/Cargo.toml
 
   deny:
     runs-on: ubuntu-latest

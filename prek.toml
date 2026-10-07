@@ -71,7 +71,7 @@ hooks = [
     "--no-deps",
   ] },
   { id = "cargo-fix", args = [
-    "--allow-ctaged",
+    "--allow-staged",
     "--allow-dirty",
   ] },
   { id = "cargo-fmt" },
@@ -85,3 +85,9 @@ hooks = [
 ]
 repo = "https://github.com/AndrejOrsula/pre-commit-cargo"
 rev = "0.5.0"
+
+[[repos]]
+hooks = [
+  { entry = "cargo +nightly no-std-check --manifest-path static/Cargo.toml", files = '(\.rs|Cargo\.(toml|lock))$', id = "cargo-no-std-check-static", language = "system", name = "cargo no-std-check (static)", pass_filenames = false },
+]
+repo = "local"
