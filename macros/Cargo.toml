@@ -18,9 +18,9 @@ heck = "0.5"
 iso3166-parsers.workspace = true
 proc-macro2 = "1"
 quote = "1"
-serde = { workspace = true, features = ["std"] }
-serde_json = { workspace = true, features = ["std"] }
-syn = { version = "3", features = ["full"] }
+serde = { features = ["std"], workspace = true }
+serde_json = { features = ["std"], workspace = true }
+syn = { features = ["full"], version = "3" }
 
 [lints]
 workspace = true

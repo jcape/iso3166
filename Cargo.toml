@@ -1,13 +1,13 @@
 [workspace]
-resolver = "2"
-members = ["macros", "parsers", "static"]
 exclude = [".cache"]
+members = ["macros", "parsers", "static"]
+resolver = "2"
 
 [workspace.dependencies]
 csv = "1"
 iso3166-macros = { path = "./macros", version = "=0.4.3" }
 iso3166-parsers = { path = "./parsers", version = "=0.4.3" }
-serde = { version = "1.0.229", default-features = false, features = ["derive"] }
+serde = { default-features = false, features = ["derive"], version = "1.0.229" }
 serde_json = "1"
 
 [workspace.lints.clippy]
@@ -72,17 +72,17 @@ verbose_file_reads = "deny"
 [workspace.lints.rust]
 missing_debug_implementations = "deny"
 missing_docs = "deny"
-unreachable_pub = "deny"
 rust_2018_idioms = "deny"
+unreachable_pub = "deny"
 unsafe_code = "deny"
 
 [workspace.metadata.release]
-shared-version = true
 consolidate-commits = true
-tag-name = "v{{version}}"
 pre-release-replacements = [
-    { file = "README.md", search = "iso3166-[a-z-]+/[0-9.]+", replace = "{{crate_name}}/{{version}}" },
+  { file = "README.md", replace = "{{crate_name}}/{{version}}", search = "iso3166-[a-z-]+/[0-9.]+" },
 ]
+shared-version = true
+tag-name = "v{{version}}"
 
 [workspace.package]
 authors = ["James Cape <jamescape777@pm.me>"]

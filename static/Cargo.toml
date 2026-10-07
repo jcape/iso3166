@@ -12,7 +12,7 @@ version.workspace = true
 
 [dependencies]
 iso3166-macros.workspace = true
-serde = { workspace = true, optional = true, features = ["derive"] }
+serde = { features = ["derive"], optional = true, workspace = true }
 
 [dev-dependencies]
 serde.workspace = true
