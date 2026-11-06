@@ -22,7 +22,7 @@ fn numeric(countries: &Countries) -> TokenStream {
     let user_ident = user.ident();
     let user_numeric = user.numeric();
 
-    let mut retval = quote::quote! {
+    quote::quote! {
         /// ISO 3166-1 Numeric Country Codes.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
         #[non_exhaustive]
@@ -37,9 +37,7 @@ fn numeric(countries: &Countries) -> TokenStream {
                 #user_ident = #user_numeric,
             )*
         }
-    };
 
-    retval.extend(quote::quote! {
         impl Numeric {
             /// Try to create a new numeric value from the given 16-bit integer.
             ///
@@ -129,9 +127,7 @@ fn numeric(countries: &Countries) -> TokenStream {
                 }
             }
         }
-    });
-
-    retval
+    }
 }
 
 /// The primary function to emit the `Alpha2` enum.

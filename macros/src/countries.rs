@@ -12,8 +12,6 @@ pub(crate) struct Countries {
     ident: Vec<Ident>,
     /// The documentation for the given variant.
     doc: Vec<String>,
-    /// The compact (u8) code.
-    compact: Vec<u8>,
     /// The ISO standard numeric code.
     numeric: Vec<u16>,
     /// The alpha-2 code as a string literal.
@@ -50,7 +48,6 @@ impl Countries {
         Self {
             ident,
             doc,
-            compact: Vec::default(),
             numeric,
             alpha2_str: Vec::default(),
             alpha2_bytes: Vec::default(),
@@ -125,7 +122,6 @@ impl Countries {
         Self {
             ident,
             doc,
-            compact: Vec::default(),
             numeric: Vec::default(),
             alpha2_str,
             alpha2_bytes,
@@ -208,7 +204,6 @@ impl Countries {
         Self {
             ident,
             doc,
-            compact: Vec::default(),
             numeric: Vec::default(),
             alpha2_str: Vec::default(),
             alpha2_bytes: Vec::default(),
@@ -226,7 +221,6 @@ impl Countries {
         let mut retval = Self {
             ident: Vec::with_capacity(records.len()),
             doc: Vec::with_capacity(records.len()),
-            compact: Vec::with_capacity(records.len()),
             numeric: Vec::with_capacity(records.len()),
             alpha2_str: Vec::with_capacity(records.len()),
             alpha2_bytes: Vec::with_capacity(records.len()),
@@ -259,10 +253,6 @@ impl Countries {
 
             retval.ident.push(ident);
             retval.doc.push(doc);
-            retval.compact.push(
-                u8::try_from(retval.compact.len())
-                    .map_err(|_error| Error::new(span, "More than 255 countries!"))?,
-            );
             retval.numeric.push(numeric);
             retval
                 .alpha2_str
