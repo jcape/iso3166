@@ -11,7 +11,10 @@ use core::{
     str::FromStr,
 };
 
-iso3166_macros::generate!(lukes_json = "all.json");
+iso3166_macros::generate!(
+    lukes_json = "all.json",
+    ip2location_csv = "IP2LOCATION-ISO3166-2.CSV"
+);
 
 impl Display for Error {
     #[inline]

@@ -11,6 +11,7 @@ exclude = '''
   |^parsers\/src\/ip2location\/IP2LOCATION-ISO3166-2\.CSV
   |^parsers\/src\/m49\/2025-09-05\.csv
   |^parsers\/src\/lukes\/2025-12-29\.json
+  |^static\/src\/IP2LOCATION-ISO3166-2\.CSV
   |^static\/src\/all\.json
 )$'''
 
