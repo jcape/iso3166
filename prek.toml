@@ -8,6 +8,7 @@ exclude = '''
 (?x)^(
   ^LICENSE
   |^CODE_OF_CONDUCT.md
+  |^parsers\/src\/ip2location\/IP2LOCATION-ISO3166-2\.CSV
   |^parsers\/src\/m49\/2025-09-05\.csv
   |^parsers\/src\/lukes\/2025-12-29\.json
   |^static\/src\/all\.json
@@ -62,26 +63,26 @@ rev = "0.20.2"
 hooks = [
   { args = [
     "--all-features",
-  ], id = "cargo-check" },
+  ], files = '(\.rs|Cargo\.(toml|lock))$', id = "cargo-check" },
   { args = [
     "--all-features",
-  ], id = "cargo-clippy" },
+  ], files = '(\.rs|Cargo\.(toml|lock))$', id = "cargo-clippy" },
   { args = [
     "--all-features",
-  ], id = "cargo-test" },
+  ], files = '(\.rs|Cargo\.(toml|lock))$', id = "cargo-test" },
   { args = [
     "--all-features",
-  ], id = "cargo-test-doc" },
+  ], files = '(\.rs|Cargo\.(toml|lock)|\.md)$', id = "cargo-test-doc" },
   { args = [
     "--allow-dirty",
     "--allow-staged",
-  ], id = "cargo-fix" },
+  ], files = '(\.rs|Cargo\.(toml|lock))$', id = "cargo-fix" },
   { args = [
     "--document-private-items",
     "--no-deps",
-  ], id = "cargo-doc" },
-  { id = "cargo-fmt" },
-  { id = "cargo-update" },
+  ], files = '(\.rs|Cargo\.(toml|lock)|\.md)$', id = "cargo-doc" },
+  { files = '.*', id = "cargo-update" },
+  { files = '\.rs$', id = "cargo-fmt" },
 ]
 repo = "https://github.com/AndrejOrsula/pre-commit-cargo"
 rev = "0.5.0"
