@@ -2,6 +2,11 @@
 
 mod config;
 mod countries;
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "Subdivision generation is not wired up yet")
+)]
+mod subdivisions;
 
 use crate::{config::Config, countries::Countries};
 use iso3166_parsers::lukes::Record;
