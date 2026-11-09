@@ -6,6 +6,10 @@
 
 This crate contains parsers and structures for easily parsing third-party distributions of of the ISO 3166 data set.
 
+## Copyright Notices
+
+This site or product includes Ipregistry ISO 3166 data available from <https://ipregistry.co>.
+
 [//]: # (badges)
 
 [crate-image]: https://img.shields.io/crates/v/iso3166-parsers.svg?style=for-the-badge

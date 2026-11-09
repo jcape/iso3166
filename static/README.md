@@ -54,6 +54,10 @@ assert_eq!(numeric, alpha2);
 assert_eq!(alpha3, alpha2);
 ```
 
+## Copyright Notices
+
+This site or product includes Ipregistry ISO 3166 data available from <https://ipregistry.co>.
+
 [//]: # (badges)
 
 [crates-image]: <https://img.shields.io/crates/v/iso3166-static?style=for-the-badge>
