@@ -4,7 +4,7 @@ use heck::ToPascalCase as _;
 use iso3166_parsers::ip2location::Record as Ip2LocationRecord;
 use proc_macro2::Span;
 use std::collections::BTreeMap;
-use syn::{Error, Ident, Result};
+use syn::{Error, Ident, LitByteStr, LitStr, Result};
 
 /// A struct of arrays containing the subdivisions of a single country.
 #[derive(Clone)]
@@ -15,6 +15,10 @@ pub(crate) struct Subdivisions {
     ident: Vec<Ident>,
     /// The documentation for each subdivision, in the form `code - name`.
     doc: Vec<String>,
+    /// The ISO 3166-2 code of each subdivision, as a string literal.
+    code_str: Vec<LitStr>,
+    /// The ISO 3166-2 code of each subdivision, as a byte string literal.
+    code_bytes: Vec<LitByteStr>,
 }
 
 impl Subdivisions {
@@ -26,6 +30,10 @@ impl Subdivisions {
     /// # Errors
     ///
     /// - When a subdivision name cannot be converted into a valid ASCII identifier.
+    #[expect(
+        clippy::single_call_fn,
+        reason = "Specialized constructor keeping subdivision logic together"
+    )]
     pub(crate) fn from_ip2location(
         span: Span,
         records: &[Ip2LocationRecord],
@@ -49,15 +57,25 @@ impl Subdivisions {
                     country_code: country_code.to_owned(),
                     ident: Vec::new(),
                     doc: Vec::new(),
+                    code_str: Vec::new(),
+                    code_bytes: Vec::new(),
                 });
             entry.ident.push(ident);
             entry.doc.push(doc);
+            entry.code_str.push(LitStr::new(code, Span::mixed_site()));
+            entry
+                .code_bytes
+                .push(LitByteStr::new(code.as_bytes(), Span::mixed_site()));
         }
 
         Ok(retval)
     }
 
     /// Retrieve the ISO 3166-1 alpha-2 country code.
+    #[expect(
+        clippy::single_call_fn,
+        reason = "Accessor kept alongside its siblings"
+    )]
     pub(crate) fn country_code(&self) -> &str {
         &self.country_code
     }
@@ -70,6 +88,16 @@ impl Subdivisions {
     /// Retrieve the documentation strings, as a slice.
     pub(crate) fn doc(&self) -> &[String] {
         &self.doc
+    }
+
+    /// Retrieve the ISO 3166-2 code string literals, as a slice.
+    pub(crate) fn code_str(&self) -> &[LitStr] {
+        &self.code_str
+    }
+
+    /// Retrieve the ISO 3166-2 code byte string literals, as a slice.
+    pub(crate) fn code_bytes(&self) -> &[LitByteStr] {
+        &self.code_bytes
     }
 }
 
@@ -158,6 +186,7 @@ mod test {
     use super::Subdivisions;
     use iso3166_parsers::ip2location::Record;
     use proc_macro2::Span;
+    use syn::LitStr;
 
     /// Build a record from the given fields.
     fn record(country_code: &str, subdivision_name: &str, code: &str) -> Record {
@@ -188,6 +217,9 @@ mod test {
         assert_eq!(us.country_code(), "US");
         assert_eq!(us.doc(), [" US-NY - New York", " US-NC - North Carolina"]);
         assert_eq!(us.ident(), ["NewYork", "NorthCarolina"]);
+        let us_codes = us.code_str().iter().map(LitStr::value).collect::<Vec<_>>();
+        assert_eq!(us_codes, ["US-NY", "US-NC"]);
+        assert_eq!(us.code_bytes().len(), 2);
 
         let ca = map.get("CA").expect("Missing CA");
         assert_eq!(ca.ident(), ["Ontario", "Quebec"]);

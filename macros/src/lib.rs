@@ -2,18 +2,15 @@
 
 mod config;
 mod countries;
-#[cfg_attr(
-    not(test),
-    expect(dead_code, reason = "Subdivision generation is not wired up yet")
-)]
 mod subdivisions;
 
-use crate::{config::Config, countries::Countries};
-use iso3166_parsers::lukes::Record;
+use crate::{config::Config, countries::Countries, subdivisions::Subdivisions};
+use core::result::Result as StdResult;
+use iso3166_parsers::{ip2location::Record as Ip2LocationRecord, lukes::Record};
 use proc_macro::TokenStream as TokenStream1;
-use proc_macro2::TokenStream;
-use std::fs::File;
-use syn::{Error, Meta, Result, Token, parse::Parser, punctuated::Punctuated};
+use proc_macro2::{Span, TokenStream};
+use std::{collections::BTreeMap, fs::File};
+use syn::{Error, Ident, Meta, Result, Token, parse::Parser, punctuated::Punctuated};
 
 /// The primary method to output the `Numeric` enum.
 #[expect(clippy::single_call_fn, reason = "Clean code, separation of concerns")]
@@ -440,6 +437,136 @@ fn alpha3(countries: &Countries) -> TokenStream {
     }
 }
 
+/// Generate the ISO 3166-2 subdivision enum for a single country.
+#[expect(clippy::single_call_fn, reason = "Clean code.")]
+fn subdivision_enum(ident: &Ident, country_doc: &str, subdivisions: &Subdivisions) -> TokenStream {
+    let enum_doc = format!(" ISO 3166-2 Subdivisions of {}.", country_doc.trim());
+    let doc = subdivisions.doc();
+    let variant = subdivisions.ident();
+    let code_str = subdivisions.code_str();
+    let code_bytes = subdivisions.code_bytes();
+
+    quote::quote! {
+        #[doc = #enum_doc]
+        #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[non_exhaustive]
+        pub enum #ident {
+            #(
+                #[doc = #doc]
+                #variant,
+            )*
+        }
+
+        impl #ident {
+            /// Parse the given ISO 3166-2 code string slice into the enum value.
+            ///
+            /// # Errors
+            ///
+            /// - [`Error::UnknownCode`] when the string value is not a known subdivision code
+            ///   for this country.
+            #[inline]
+            pub const fn from_static_str(value: &str) -> Result<Self, Error> {
+                match value.as_bytes() {
+                    #(
+                        #code_bytes => Ok(Self::#variant),
+                    )*
+                    _ => Err(Error::UnknownCode),
+                }
+            }
+
+            /// Get the ISO 3166-2 code of the given subdivision.
+            #[inline]
+            pub const fn as_str(&self) -> &'static str {
+                match self {
+                    #(
+                        Self::#variant => #code_str,
+                    )*
+                }
+            }
+        }
+    }
+}
+
+/// Generate the `Location` enum, which pairs each country with its (optional) subdivision.
+#[expect(clippy::single_call_fn, reason = "Clean code.")]
+fn location(variants: &[TokenStream]) -> TokenStream {
+    quote::quote! {
+        /// A location, consisting of a country and, where the country has ISO 3166-2
+        /// subdivisions, a subdivision within it.
+        #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[non_exhaustive]
+        pub enum Location {
+            #(
+                #variants
+            )*
+        }
+    }
+}
+
+/// Generate the per-country subdivision enums, inside a `subdivisions` module, and the
+/// `Location` enum.
+///
+/// # Errors
+///
+/// - When a country code in the subdivisions map is not present in the given countries.
+#[expect(clippy::single_call_fn, reason = "Clean code.")]
+fn subdivisions(
+    countries: &Countries,
+    subdivisions: &BTreeMap<String, Subdivisions>,
+) -> Result<TokenStream> {
+    let mut enums = TokenStream::new();
+    let mut location_variants = Vec::with_capacity(countries.ident().len());
+    let mut seen = 0usize;
+
+    for ((ident, doc), alpha2) in countries
+        .ident()
+        .iter()
+        .zip(countries.doc())
+        .zip(countries.alpha2_str())
+    {
+        if let Some(subdivisions) = subdivisions.get(&alpha2.value()) {
+            seen = seen.saturating_add(1);
+            enums.extend(subdivision_enum(ident, doc, subdivisions));
+            location_variants.push(quote::quote! {
+                #[doc = #doc]
+                #ident(subdivisions::#ident),
+            });
+        } else {
+            location_variants.push(quote::quote! {
+                #[doc = #doc]
+                #ident,
+            });
+        }
+    }
+
+    if seen != subdivisions.len() {
+        let known = countries
+            .alpha2_str()
+            .iter()
+            .map(syn::LitStr::value)
+            .collect::<Vec<_>>();
+        let unknown = subdivisions
+            .values()
+            .map(Subdivisions::country_code)
+            .filter(|code| !known.iter().any(|known| known == code))
+            .collect::<Vec<_>>();
+        let message = format!("Subdivisions found for unknown country codes: {unknown:?}");
+        return Err(Error::new(Span::call_site(), message));
+    }
+
+    let mut retval = quote::quote! {
+        /// ISO 3166-2 subdivision enums, one per country with subdivisions.
+        pub mod subdivisions {
+            use super::Error;
+
+            #enums
+        }
+    };
+    retval.extend(location(&location_variants));
+
+    Ok(retval)
+}
+
 /// The top-level fallible generation function.
 #[expect(
     clippy::single_call_fn,
@@ -465,6 +592,18 @@ fn try_generate(tokens: TokenStream) -> Result<TokenStream> {
 
     let countries = Countries::from_lukes(&data, *config.lukes_span())?;
 
+    let ip2location = csv::Reader::from_path(config.ip2location_csv())
+        .and_then(|mut reader| {
+            reader
+                .deserialize::<Ip2LocationRecord>()
+                .collect::<StdResult<Vec<_>, _>>()
+        })
+        .map_err(|error| {
+            let message = format!("Could not parse CSV path: {error}");
+            Error::new(*config.ip2location_span(), message)
+        })?;
+    let subdivision_map = Subdivisions::from_ip2location(*config.ip2location_span(), &ip2location)?;
+
     let mut retval = quote::quote! {
         /// An enumeration of errors related to ISO 3166 codes.
         #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialOrd, PartialEq)]
@@ -483,10 +622,12 @@ fn try_generate(tokens: TokenStream) -> Result<TokenStream> {
     let numeric = numeric(&countries);
     let alpha2 = alpha2(&countries);
     let alpha3 = alpha3(&countries);
+    let subdivisions = subdivisions(&countries, &subdivision_map)?;
 
     retval.extend(numeric);
     retval.extend(alpha2);
     retval.extend(alpha3);
+    retval.extend(subdivisions);
 
     Ok(retval)
 }

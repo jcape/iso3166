@@ -4,13 +4,14 @@
 -->[![Docs][docs-image]][docs-link]<!--
 -->![MSRV 1.88.0][msrv-image]
 
-This crate provides generated enumerations for use as with ISO 3166-1 codes. This crate is both `no-std` and `no-alloc` (with no need/desire to enable them), and supports serde via the `"serde"` feature.
+This crate provides generated enumerations for ISO 3166-1 and ISO 3166-2 codes. This crate is both `no-std` and `no-alloc` (with no need/desire to enable them), and supports serde via the `"serde"` feature.
 
 There are three primary objects in this crate:
 
 - [`Numeric`](crate::Numeric) - Numeric country codes.
 - [`Alpha2`](crate::Alpha2) - Two-character country codes.
 - [`Alpha3`](crate::Alpha3) - Three-character country codes.
+- [`Location`](crate::Location) - An nested enumeration of country and subdivision codes.
 
 ## Features
 

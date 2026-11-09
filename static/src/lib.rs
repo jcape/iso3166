@@ -159,7 +159,7 @@ impl FromStr for Alpha3 {
 mod test {
     extern crate std;
 
-    use super::*;
+    use super::{subdivisions::UnitedStatesOfAmerica, *};
     use std::string::ToString;
 
     const USA_EXPECTED2: &str = "US";
@@ -245,5 +245,28 @@ mod test {
     fn alpha3_try_from(input: &str, expected: Result<Alpha3, Error>) {
         let actual = Alpha3::try_from(input);
         assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn subdivision_from_static_str() {
+        assert_eq!(
+            UnitedStatesOfAmerica::from_static_str("US-NY"),
+            Ok(UnitedStatesOfAmerica::NewYork)
+        );
+        assert_eq!(
+            UnitedStatesOfAmerica::from_static_str("CA-ON"),
+            Err(Error::UnknownCode)
+        );
+    }
+
+    #[test]
+    fn subdivision_as_str() {
+        assert_eq!(UnitedStatesOfAmerica::NewYork.as_str(), "US-NY");
+    }
+
+    #[test]
+    fn location_variants() {
+        let ny = Location::UnitedStatesOfAmerica(UnitedStatesOfAmerica::NewYork);
+        assert_ne!(ny, Location::Singapore);
     }
 }

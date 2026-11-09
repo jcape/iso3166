@@ -195,13 +195,11 @@ impl Config {
     }
 
     /// Retrieve the path to the ip2location CSV file.
-    #[expect(dead_code, reason = "Subdivision generation is not wired up yet")]
     pub(crate) fn ip2location_csv(&self) -> &Path {
         &self.ip2location_csv
     }
 
     /// Retrieve the span for the ip2location CSV file.
-    #[expect(dead_code, reason = "Subdivision generation is not wired up yet")]
     pub(crate) fn ip2location_span(&self) -> &Span {
         &self.ip2location_span
     }
