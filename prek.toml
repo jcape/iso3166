@@ -9,6 +9,7 @@ exclude = '''
   ^LICENSE
   |^CODE_OF_CONDUCT.md
   |^parsers\/src\/ip2location\/IP2LOCATION-ISO3166-2\.CSV
+  |^parsers\/src\/ipregistry\/[^/]+\.csv
   |^parsers\/src\/m49\/2025-09-05\.csv
   |^parsers\/src\/lukes\/2025-12-29\.json
   |^static\/src\/IP2LOCATION-ISO3166-2\.CSV
@@ -90,6 +91,7 @@ rev = "0.5.0"
 
 [[repos]]
 hooks = [
+  { always_run = true, entry = "bash -c 'for f in administrative-languages countries-sovereignty countries subdivisions; do curl --fail --silent --show-error --location --output \"parsers/src/ipregistry/$f.csv\" \"https://raw.githubusercontent.com/ipregistry/iso3166/main/$f.csv\" || exit 1; done'", id = "fetch-ipregistry", language = "system", name = "fetch latest ipregistry data", pass_filenames = false },
   { entry = "cargo +nightly no-std-check --manifest-path static/Cargo.toml", files = '(\.rs|Cargo\.(toml|lock))$', id = "cargo-no-std-check-static", language = "system", name = "cargo no-std-check (static)", pass_filenames = false },
   { entry = "taplo check", id = "taplo", language = "system", name = "taplo check", pass_filenames = false },
   { entry = "taplo format", id = "taplo", language = "system", name = "taplo format", pass_filenames = false },
