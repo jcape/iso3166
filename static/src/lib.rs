@@ -12,7 +12,9 @@ use core::{
 };
 
 iso3166_macros::generate!(
-    lukes_json = "all.json",
+    ipregistry_countries_csv = "ipregistry-countries.csv",
+    ipregistry_countries_sovereignty_csv = "ipregistry-countries-sovereignty.csv",
+    ipregistry_subdivisions_csv = "ipregistry-subdivisions.csv",
     ip2location_csv = "IP2LOCATION-ISO3166-2.CSV"
 );
 

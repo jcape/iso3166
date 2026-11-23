@@ -1,8 +1,9 @@
 //! County records suitable for use in macros.
 
 use heck::ToPascalCase as _;
-use iso3166_parsers::lukes::Record as LukesRecord;
+use iso3166_parsers::ipregistry::{Country as IpregistryCountry, CountrySovereignty};
 use proc_macro2::Span;
+use std::collections::HashMap;
 use syn::{Error, Ident, LitByteStr, LitStr, Result};
 
 /// A struct of arrays of data used to expand the macro.
@@ -22,6 +23,10 @@ pub(crate) struct Countries {
     alpha3_str: Vec<LitStr>,
     /// The alpha-3 code, in bytes.
     alpha3_bytes: Vec<LitByteStr>,
+    /// The sovereign (parent) country's identifier, if any, one per country.
+    ///
+    /// Empty for collections that do not carry parent information.
+    parent: Vec<Option<Ident>>,
 }
 
 impl Countries {
@@ -53,6 +58,7 @@ impl Countries {
             alpha2_bytes: Vec::default(),
             alpha3_str: Vec::default(),
             alpha3_bytes: Vec::default(),
+            parent: Vec::default(),
         }
     }
 
@@ -127,6 +133,7 @@ impl Countries {
             alpha2_bytes,
             alpha3_str: Vec::default(),
             alpha3_bytes: Vec::default(),
+            parent: Vec::default(),
         }
     }
 
@@ -209,51 +216,67 @@ impl Countries {
             alpha2_bytes: Vec::default(),
             alpha3_str,
             alpha3_bytes,
+            parent: Vec::default(),
         }
     }
 
-    /// Create a new struct-of-arrays collection from the given lukes records.
+    /// Create a new struct-of-arrays collection from the given ipregistry records.
+    ///
+    /// The `sovereign_country_code` of each [`CountrySovereignty`] record (matched to an
+    /// [`IpregistryCountry`] by alpha-2 code) is resolved to the sovereign country's identifier,
+    /// and stored in `parent`. Countries without a sovereignty
+    /// record, or which are independent, have no parent.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if a sovereign country code does not match any of the given countries.
     #[expect(
         clippy::single_call_fn,
         reason = "Specialized constructor keeping country logic together"
     )]
-    pub(crate) fn from_lukes(records: &[LukesRecord], span: Span) -> Result<Self> {
+    pub(crate) fn from_ipregistry(
+        countries: &[IpregistryCountry],
+        sovereignty: &[CountrySovereignty],
+        span: Span,
+    ) -> Result<Self> {
+        let idents = countries
+            .iter()
+            .map(|country| (country.alpha2.as_str(), name_to_ident(&country.name_long)))
+            .collect::<HashMap<_, _>>();
+        let sovereigns = sovereignty
+            .iter()
+            .map(|record| (record.country_code.as_str(), record))
+            .collect::<HashMap<_, _>>();
+
         let mut retval = Self {
-            ident: Vec::with_capacity(records.len()),
-            doc: Vec::with_capacity(records.len()),
-            numeric: Vec::with_capacity(records.len()),
-            alpha2_str: Vec::with_capacity(records.len()),
-            alpha2_bytes: Vec::with_capacity(records.len()),
-            alpha3_str: Vec::with_capacity(records.len()),
-            alpha3_bytes: Vec::with_capacity(records.len()),
+            ident: Vec::with_capacity(countries.len()),
+            doc: Vec::with_capacity(countries.len()),
+            numeric: Vec::with_capacity(countries.len()),
+            alpha2_str: Vec::with_capacity(countries.len()),
+            alpha2_bytes: Vec::with_capacity(countries.len()),
+            alpha3_str: Vec::with_capacity(countries.len()),
+            alpha3_bytes: Vec::with_capacity(countries.len()),
+            parent: Vec::with_capacity(countries.len()),
         };
 
-        for record in records {
-            let name = record
-                .name
-                .as_deref()
-                .ok_or_else(|| Error::new(span, "Missing country name in record"))?;
-            let numeric = record
-                .country_code
-                .as_deref()
-                .ok_or_else(|| Error::new(span, "Missing Country code in record"))?
-                .parse::<u16>()
-                .map_err(|err| Error::new(span, err.to_string()))?;
-            let alpha2 = record
-                .alpha_2
-                .as_deref()
-                .ok_or_else(|| Error::new(span, "Missing alpha-2 code in record"))?;
-            let alpha3 = record
-                .alpha_3
-                .as_deref()
-                .ok_or_else(|| Error::new(span, "Missing alpha-3 code in record"))?;
+        for country in countries {
+            let alpha2 = country.alpha2.as_str();
+            let alpha3 = country.alpha3.as_str();
+            let name = country.name_long.as_str();
 
-            let ident = name_to_ident(name);
-            let doc = format!(" {name} ({alpha2}, {alpha3})");
+            let parent = sovereigns
+                .get(alpha2)
+                .and_then(|record| record.sovereign_country_code.as_deref())
+                .map(|code| {
+                    idents.get(code).cloned().ok_or_else(|| {
+                        Error::new(span, format!("Unknown sovereign country code: {code}"))
+                    })
+                })
+                .transpose()?;
 
-            retval.ident.push(ident);
-            retval.doc.push(doc);
-            retval.numeric.push(numeric);
+            retval.ident.push(name_to_ident(&country.name_long));
+            retval.doc.push(format!(" {name} ({alpha2}, {alpha3})"));
+            retval.numeric.push(country.numeric_code);
             retval
                 .alpha2_str
                 .push(LitStr::new(alpha2, Span::mixed_site()));
@@ -266,6 +289,7 @@ impl Countries {
             retval
                 .alpha3_bytes
                 .push(LitByteStr::new(alpha3.as_bytes(), Span::mixed_site()));
+            retval.parent.push(parent);
         }
 
         Ok(retval)
@@ -304,6 +328,12 @@ impl Countries {
     /// Retrieve the alpha3 byte string literals, as a slice.
     pub(crate) fn alpha3_bytes(&self) -> &[LitByteStr] {
         &self.alpha3_bytes
+    }
+
+    /// Retrieve the parent identifiers, as a slice.
+    #[expect(dead_code, reason = "Not yet used in the macro expansion")]
+    pub(crate) fn parent(&self) -> &[Option<Ident>] {
+        &self.parent
     }
 }
 
@@ -361,40 +391,53 @@ fn push_user_alpha3(
 }
 
 /// A helper function to convert a country name into an identifier suitable for enum use.
-#[expect(clippy::single_call_fn, reason = "Clean code.")]
 fn name_to_ident(name: &str) -> Ident {
     let ident = name
         .trim()
         .to_pascal_case()
+        .replace("ÅlandIslands", "AlandIslands")
         .replace("BoliviaPlurinationalStateOf", "Bolivia")
-        .replace("VirginIslandsBritish", "BritishVirginIslands")
         .replace("TaiwanProvinceOfChina", "Taiwan")
         .replace(
             "CongoDemocraticRepublicOfThe",
             "DemocraticRepublicOfTheCongo",
         )
-        .replace("ÅlandIslands", "AlandIslands")
-        .replace("PalestineStateOf", "Palestine")
-        .replace("IranIslamicRepublicOf", "Iran")
+        .replace(
+            "CongoTheDemocraticRepublicOfThe",
+            "DemocraticRepublicOfTheCongo",
+        )
         .replace("CôteDIvoire", "CoteDIvoire")
+        .replace("Curaçao", "Curacao")
+        .replace("FalklandIslandsThe", "FalklandIslandsMalvinas")
+        .replace("IranIslamicRepublicOf", "Iran")
         .replace("KoreaDemocraticPeopleSRepublicOf", "NorthKorea")
         .replace("KoreaRepublicOf", "SouthKorea")
+        .replace("KoreaTheDemocraticPeopleSRepublicOf", "NorthKorea")
+        .replace("KoreaTheRepublicOf", "SouthKorea")
         .replace("LaoPeopleSDemocraticRepublic", "Laos")
         .replace("MoldovaRepublicOf", "Moldova")
-        .replace("NetherlandsKingdomOfThe", "Netherlands")
-        .replace("Curaçao", "Curacao")
+        .replace("MoldovaTheRepublicOf", "Moldova")
         .replace("MicronesiaFederatedStatesOf", "Micronesia")
+        .replace("Naoero", "Nauru")
+        .replace("NetherlandsKingdomOfThe", "Netherlands")
+        .replace("PalestineStateOf", "Palestine")
         .replace("Réunion", "Reunion")
         .replace("RussianFederation", "Russia")
         .replace("SaintBarthélemy", "SaintBarthelemy")
+        .replace("SyrianArabRepublic", "Syria")
         .replace("Türkiye", "Turkey")
+        .replace("TanzaniaUnitedRepublicOf", "Tanzania")
+        .replace("TanzaniaTheUnitedRepublicOf", "Tanzania")
         .replace(
             "UnitedKingdomOfGreatBritainAndNorthernIreland",
             "UnitedKingdom",
         )
-        .replace("TanzaniaUnitedRepublicOf", "Tanzania")
         .replace("VenezuelaBolivarianRepublicOf", "Venezuela")
-        .replace("SyrianArabRepublic", "Syria");
+        .replace("VirginIslandsUnitedKingdom", "BritishVirginIslands")
+        .replace("VirginIslandsBritish", "BritishVirginIslands")
+        .replace("VirginIslandsUnitedStates", "VirginIslandsUS");
+
+    let ident = ident.strip_suffix("The").unwrap_or(&ident);
 
     quote::format_ident!("{ident}")
 }

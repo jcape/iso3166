@@ -4,12 +4,21 @@ mod config;
 mod countries;
 mod subdivisions;
 
-use crate::{config::Config, countries::Countries, subdivisions::Subdivisions};
+use crate::{
+    config::{Config, Source},
+    countries::Countries,
+    subdivisions::Subdivisions,
+};
 use core::result::Result as StdResult;
-use iso3166_parsers::{ip2location::Record as Ip2LocationRecord, lukes::Record};
+use csv::Reader;
+use iso3166_parsers::{
+    ip2location::Record as Ip2LocationRecord,
+    ipregistry::{Country as IpregistryCountry, CountrySovereignty},
+};
 use proc_macro::TokenStream as TokenStream1;
 use proc_macro2::{Span, TokenStream};
-use std::{collections::BTreeMap, fs::File};
+use serde::de::DeserializeOwned;
+use std::collections::BTreeMap;
 use syn::{Error, Ident, Meta, Result, Token, parse::Parser, punctuated::Punctuated};
 
 /// The primary method to output the `Numeric` enum.
@@ -567,6 +576,20 @@ fn subdivisions(
     Ok(retval)
 }
 
+/// Read and deserialize every record of the given CSV file.
+///
+/// # Errors
+///
+/// - When the file cannot be opened, or a record cannot be deserialized.
+fn read_csv<T: DeserializeOwned>(source: &Source) -> Result<Vec<T>> {
+    Reader::from_path(source.path())
+        .and_then(|mut reader| reader.deserialize::<T>().collect::<StdResult<Vec<_>, _>>())
+        .map_err(|error| {
+            let message = format!("Could not parse CSV path: {error}");
+            Error::new(source.span(), message)
+        })
+}
+
 /// The top-level fallible generation function.
 #[expect(
     clippy::single_call_fn,
@@ -577,32 +600,19 @@ fn try_generate(tokens: TokenStream) -> Result<TokenStream> {
         .parse2(tokens)
         .and_then(|args| Config::build(&args))?;
 
-    let f = File::open(config.lukes_path()).map_err(|error| {
-        let message = format!("Could not open JSON path: {error}");
-        Error::new(*config.lukes_span(), message)
-    })?;
+    let mut countries_data = read_csv::<IpregistryCountry>(config.ipregistry_countries())?;
+    let sovereignty_data = read_csv::<CountrySovereignty>(config.ipregistry_sovereignty())?;
+    countries_data.sort_unstable_by_key(|country| country.numeric_code);
 
-    let mut data = serde_json::from_reader::<_, Vec<Record>>(f).map_err(|error| {
-        let message = format!("Could not parse JSON path: {error}");
-        Error::new(*config.lukes_span(), message)
-    })?;
+    let countries = Countries::from_ipregistry(
+        &countries_data,
+        &sovereignty_data,
+        config.ipregistry_countries().span(),
+    )?;
 
-    data.retain(|record| record.country_code.is_some());
-    data.sort_unstable_by(|lhs, rhs| lhs.country_code.cmp(&rhs.country_code));
-
-    let countries = Countries::from_lukes(&data, *config.lukes_span())?;
-
-    let ip2location = csv::Reader::from_path(config.ip2location_csv())
-        .and_then(|mut reader| {
-            reader
-                .deserialize::<Ip2LocationRecord>()
-                .collect::<StdResult<Vec<_>, _>>()
-        })
-        .map_err(|error| {
-            let message = format!("Could not parse CSV path: {error}");
-            Error::new(*config.ip2location_span(), message)
-        })?;
-    let subdivision_map = Subdivisions::from_ip2location(*config.ip2location_span(), &ip2location)?;
+    let ip2location = read_csv::<Ip2LocationRecord>(config.ip2location())?;
+    let subdivision_map =
+        Subdivisions::from_ip2location(config.ip2location().span(), &ip2location)?;
 
     let mut retval = quote::quote! {
         /// An enumeration of errors related to ISO 3166 codes.
