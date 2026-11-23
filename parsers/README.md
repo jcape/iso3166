@@ -13,7 +13,7 @@ This site or product includes Ipregistry ISO 3166 data available from <https://i
 [//]: # (badges)
 
 [crate-image]: https://img.shields.io/crates/v/iso3166-parsers.svg?style=for-the-badge
-[crate-link]: https://crates.io/crates/iso3166-parsers/0.4.3
-[docs-image]: https://img.shields.io/docsrs/iso3166-parsers/0.4.3?style=for-the-badge
-[docs-link]: https://docs.rs/crate/iso3166-parsers/0.4.3
-[msrv-image]: https://img.shields.io/crates/msrv/iso3166-parsers/0.4.3?style=for-the-badge
+[crate-link]: https://crates.io/crates/iso3166-parsers/0.4.4
+[docs-image]: https://img.shields.io/docsrs/iso3166-parsers/0.4.4?style=for-the-badge
+[docs-link]: https://docs.rs/crate/iso3166-parsers/0.4.4
+[msrv-image]: https://img.shields.io/crates/msrv/iso3166-parsers/0.4.4?style=for-the-badge
